@@ -4,8 +4,7 @@ class Node {
         Node left, right; 
           
         Node(int value){ 
-            this.value = value; 
-            left = null; 
+            this.value = value; left = null; 
             right = null; 
         } 
     } 

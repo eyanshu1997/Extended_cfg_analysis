@@ -69,15 +69,15 @@ vector<string> rememp(vector<string> lines)
 	for(auto a:lines)
 	{
 		a=trim(a);
-		if(a!="")
+		if(a!=""&&a!=";")
 			ne.push_back(a);
 	}
 	return ne;
 }
-vector<string> parse()
+vector<string> parse(string f)
 {
 	vector<string> lines;
-	ifstream fi("Test.java");
+	ifstream fi(f);
 	if (!fi.is_open())
   	{
   		cout<<"file open error\n";
@@ -91,17 +91,15 @@ vector<string> parse()
 		{
 			vector<string> z=handlebr(x,"{");
 			for(auto y:z)
-				lines.push_back(trim(y));
+			{
+				vector<string> a=handlebr(y,";");
+				for(auto b:a)
+					lines.push_back(trim(b));
+			}
 		}
 	}
 	lines=rememp(lines);
 	return lines;
 }
-int main()
-{
-	//string line="class node{";
-	//vector<string> lines=handlebr(trim(line),"{");
-	vector<string> lines=parse();
-	print_lines(lines);
-}
+
 
