@@ -14,26 +14,38 @@ class inst
 	inst(string a,vector<inst> x)
 	{
 		type=2;
+		instruction=a;
 		instlist=x;
+	}
+	inst(string a,string b,string c)
+	{
+		type=3;
+		instruction=a;
+		cl=b;
+		me=c;
+		
 	}
 	void print()
 	{
 		cout<<"type "<<type<<"\n";
 		if(type==1)
-			cout<<instruction<<"\n";
+			cout<<instruction<<"\n\n";
 		else if(type==2)
 		{
-			cout<<"instructions are \n";
+			cout<<"if statement    "<<instruction<<"\n";
+			cout<<" no of instructions are "<<instlist.size()<<"\n";
 			for (long long i = 0; i < instlist.size(); i += 1)
 			{
 				cout<<"instsurtcion " <<i<<"\n";
 				instlist[i].print();
 			}
+			cout<<"\n\n";
 		}
 		else
 		{
+			cout<<instruction<<"\n";
 			cout<<"class is "<<cl<<"\n";
-			cout<<"method is "<<me<<"\n";
+			cout<<"method is "<<me<<"\n\n";
 		}
 		
 	}
@@ -46,6 +58,11 @@ class method
 	method(string na)
 	{
 		name=na;
+	}
+	method(string na,vector<inst> a)
+	{
+		name=na;
+		instlist=a;
 	}
 	void print()
 	{

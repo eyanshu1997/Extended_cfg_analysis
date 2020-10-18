@@ -2,6 +2,8 @@
 #include "classes.cc"
 vector<string> data_types={"int","String","byte","short","long","float","double","boolean","char","void"};
 vector<string> modifiers={"public","private","protected"};
+vector<string>cond={"if","else"};
+vector<string>loop={"while","for"};
 vector<variables> vars;
 vector<string> inbr(vector<string>lines)
 {
@@ -24,6 +26,68 @@ vector<string> inbr(vector<string>lines)
 	}
 	return li;
 }
+int inbrc(vector<string>lines,int cc)
+{
+	int br=1;
+	if(lines[cc]!="{")
+	{
+		cout<<"error in braket\n";
+		exit(0);
+	}
+	for(int i=cc+1;i<lines.size();i++)
+	{
+		if(lines[i]=="{")
+			br++;
+		if(lines[i]=="}")
+			br--;
+		if(br==0)
+			return i;
+	}
+	return cc;
+}
+int inif(vector<string>lines,int cc)
+{
+	int s=cc;
+	//cout<<"line no "<<s<<"\n";
+	if(cc<lines.size())
+		if(lines[s].find("{")!=string::npos)
+		{
+			int c=inbrc(lines,s);
+			return c;	
+		}
+		else
+		{
+			if(lines[s].find("if")==0)
+			{
+				
+				int c=inif(lines,s+1);
+				//cout<<"last line is "<<c<<" "<<lines[c]<<"\n";
+				if(c+1<lines.size()&&lines[c+1]=="else")
+				{
+					return inif(lines,c+2);
+				}
+				return c;
+			}
+			else
+			{
+				bool set=true;
+				for(auto a:loop)
+				{
+					if(lines[s].find(a)!=string::npos)
+					{
+						set=false;
+						int c=inif(lines,s+1);
+						return c;
+					}
+				}
+				if(set==true)
+				{
+					return s;
+				}
+			}
+		}
+	return s;
+}
 void print_vars()
 {
 	for(auto a:vars)
@@ -41,9 +105,11 @@ bool checkinit(string line)
 		return false;
 	return true;
 }
-inst get_inst(vector<string> in_ml,int cc)
+vector<inst> get_inst(vector<string> in_ml)
 {
-	if(cc<in_ml.size())
+	int cc=0;
+	vector<inst> ins;
+	while(cc<in_ml.size())
 	{
 		if(in_ml[cc].find("System.out.print")==string::npos)
 			if(checkinit(in_ml[cc]))
@@ -56,38 +122,55 @@ inst get_inst(vector<string> in_ml,int cc)
 				string cl=in_ml[cc].substr(0,s);
 				variables z(cl,tmp);
 				vars.push_back(z);
-				return inst("initialization statement "+cl+" "+tmp);
+				ins.push_back(inst("initialization statement "+cl+" "+tmp));
+				cc++;
 			}
 			else
 			{
-				//cout<<in_ml[cc]<<"\n";
-				//x.push_back(in_ml[cc]);
-				//me.add(new inst(in_ml[cc]));
-				if(in_ml[cc].find("if")!=string::npos)
+				bool set=true;
+				for(a:loop)
+					if(in_ml[cc].find(a)==0)
+					{
+						int x=inif(in_ml,cc+1);
+						set=true;
+						if(x==cc+1)
+						{
+							vector<inst> a;
+							a.add(inst(in_ml[cc+1]));
+							ins.push_back(inst(in_ml[cc],a));
+							cc=cc+2;
+						}
+						else
+						{
+							vector<string> li(in_ml.begin()+cc+1,in_ml.begin()+x-1);
+						}
+					}
+				for(a:cond)
+					if(in_ml[cc].find(a)==0)
+					{
+						int x=inif(in_ml,cc+1);
+						set=true;
+					}
+				if(set==true)
 				{
-					return inst("if "+in_ml[cc]);
+					ins.push_back("unidentified "+in_ml[cc]);
+					cc++;
 				}
-				else
-					return inst(in_ml[cc]);
 			}
 		else
 		{
 			//x.push_back("print statement "+in_ml[cc]);
-			return inst(in_ml[cc]);
+			ins.push_back(inst(in_ml[cc]));
+			cc++;
 		}
 	}
+	return ins;
 }
 method promethod(vector<string> in_ml,string na)
 {
 	//vector<string> x;
-	method me(na);
-	int cc=0;
-	while(cc<in_ml.size())
-	{
-		inst a=get_inst(in_ml,cc);
-		me.add(a);
-		cc++;
-	}
+	vector<inst> a=get_inst(in_ml);
+	method me(na,a);
 	return me;
 }
 vector<cla> findcl(vector<string> lines)
@@ -193,11 +276,11 @@ vector<cla> findcl(vector<string> lines)
 					else
 					{
 						string na=re.substr(s+1,re.size()-s-1);
-						//	cout<<"method name "<<na<<"\n";
+						//cout<<"method name "<<na<<"\n";
 						vector<string>ml(in_class.begin()+cc+1,in_class.end());
 						vector<string> in_ml=inbr(ml);
 						//print_lines(in_ml);
-						cout<<"\n\n\n";
+						//cout<<"\n\n\n";
 						method me=promethod(in_ml,na);
 						me.print();
 						cc=cc+in_ml.size()+3;
@@ -213,11 +296,14 @@ vector<cla> findcl(vector<string> lines)
 }
 int main()
 {
+	
 	//string line="class node{";
 	//vector<string> lines=handlebr(trim(line),"{");
 	vector<string> lines=parse("test/Test.java");
+//	vector<string> lines=parse("a.txt");
+//	cout<<inif(lines,0);
 //	print_lines(lines);
-	cout<<"no of lines is"<<lines.size()<<"\n";
+//	cout<<"no of lines is"<<lines.size()<<"\n";
 	vector<cla> res=findcl(lines);
 	//print_vars();
 //	vector<string> x;

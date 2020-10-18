@@ -28,7 +28,23 @@ string trim(string s)
 {
 	return rtrim(ltrim(s));
 }
-
+vector<string> handleelse(string line)
+{
+	line=trim(line);
+	vector<string>x;
+	int s=line.find("else");
+	if(s==0&&line.size()>4)
+	{
+		string rem=trim(line.substr(s+4,line.size()-s-4));
+		line=line.substr(0,4);
+		x.push_back(rem);
+		x.push_back(line);
+	}
+	else
+		x.push_back(line);
+	return x;
+	
+}
 
 vector<string> handlebr(string line,string br)
 {
@@ -94,7 +110,11 @@ vector<string> parse(string f)
 			{
 				vector<string> a=handlebr(y,";");
 				for(auto b:a)
-					lines.push_back(trim(b));
+				{
+					vector<string>c =handleelse(b);
+					for(auto d:c)
+						lines.push_back(trim(d));
+				}
 			}
 		}
 	}
