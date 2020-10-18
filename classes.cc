@@ -29,23 +29,23 @@ class inst
 	{
 		cout<<"type "<<type<<"\n";
 		if(type==1)
-			cout<<instruction<<"\n\n";
+			cout<<"["<<instruction<<"]\n\n";
 		else if(type==2)
 		{
-			cout<<"if statement    "<<instruction<<"\n";
+			cout<<"[\n if statement    "<<instruction<<"\n";
 			cout<<" no of instructions are "<<instlist.size()<<"\n";
 			for (long long i = 0; i < instlist.size(); i += 1)
 			{
 				cout<<"instsurtcion " <<i<<"\n";
 				instlist[i].print();
 			}
-			cout<<"\n\n";
+			cout<<"\n]\n\n";
 		}
 		else
 		{
-			cout<<instruction<<"\n";
+			cout<<"\n["<<instruction<<"\n";
 			cout<<"class is "<<cl<<"\n";
-			cout<<"method is "<<me<<"\n\n";
+			cout<<"method is "<<me<<"]\n\n";
 		}
 		
 	}

@@ -127,34 +127,89 @@ vector<inst> get_inst(vector<string> in_ml)
 			}
 			else
 			{
-				bool set=true;
-				for(a:loop)
+				bool set=false;
+				for(auto a:loop)
+				{
+					if(cc<in_ml.size())
 					if(in_ml[cc].find(a)==0)
 					{
-						int x=inif(in_ml,cc+1);
 						set=true;
-						if(x==cc+1)
+						if(in_ml[cc]=="{")
 						{
-							vector<inst> a;
-							a.add(inst(in_ml[cc+1]));
-							ins.push_back(inst(in_ml[cc],a));
-							cc=cc+2;
+							//if{
+							int x=inbrc(in_ml,cc+1);
+							vector<string> li(in_ml.begin()+cc+1,in_ml.begin()+x);
+							vector<inst> z=get_inst(li);
+							ins.push_back(inst(in_ml[cc],z));
+							cc=x+1;
 						}
 						else
 						{
-							vector<string> li(in_ml.begin()+cc+1,in_ml.begin()+x-1);
+							int x=inif(in_ml,cc+1);
+							if(x==cc+1)
+							{
+								//if() a=c;
+								vector<inst> ab;
+								ab.push_back(inst(in_ml[cc+1]));
+								ins.push_back(inst(in_ml[cc],ab));
+								cc=cc+2;
+							}
+							else
+							{
+								//if() if()
+								vector<string> li(in_ml.begin()+cc+1,in_ml.begin()+x+1);
+								vector<inst> l=get_inst(li);
+								ins.push_back(inst(in_ml[cc],l));
+								cc=x+1;
+							}
 						}
 					}
-				for(a:cond)
-					if(in_ml[cc].find(a)==0)
-					{
-						int x=inif(in_ml,cc+1);
-						set=true;
-					}
-				if(set==true)
+				}
+				if(set==false)
 				{
-					ins.push_back("unidentified "+in_ml[cc]);
-					cc++;
+					bool s=false;
+					for(auto a:cond)
+					{
+						if(cc<in_ml.size())
+						if(in_ml[cc].find(a)==0)
+						{
+							s=true;
+							if(in_ml[cc+1]=="{")
+							{
+								//if{
+								int x=inbrc(in_ml,cc+1);
+								vector<string> li(in_ml.begin()+cc+2,in_ml.begin()+x);
+								vector<inst> z=get_inst(li);
+								ins.push_back(inst(in_ml[cc],z));
+								cc=x+1;
+							}
+							else
+							{
+								int x=inif(in_ml,cc+1);
+								if(x==cc+1)
+								{
+									//if() a=c;
+									vector<inst> ab;
+									ab.push_back(inst(in_ml[cc+1]));
+									ins.push_back(inst(in_ml[cc],ab));
+									cc=cc+2;
+								}
+								else
+								{
+									//if() if()
+									vector<string> li(in_ml.begin()+cc+1,in_ml.begin()+x+1);
+									vector<inst> l=get_inst(li);
+									ins.push_back(inst(in_ml[cc],l));
+									cc=x+1;
+								}
+							}
+						}
+					}
+					if(s==false)
+					{
+						ins.push_back("unidentified "+in_ml[cc]);
+						cc++;
+					}
 				}
 			}
 		else
@@ -185,7 +240,7 @@ vector<cla> findcl(vector<string> lines)
 		}
 		int c=lines[pc].find("class");
 		string na=trim(lines[pc].substr(c+5,lines[pc].size()-c-5));
-		//cout<<na<<"\n";
+		cout<<na<<"\n";
 		data_types.push_back(na);
 		//print_lines(data_types);
 		vector<string> cl(lines.begin()+pc+1,lines.end());
@@ -300,10 +355,18 @@ int main()
 	//string line="class node{";
 	//vector<string> lines=handlebr(trim(line),"{");
 	vector<string> lines=parse("test/Test.java");
+
 //	vector<string> lines=parse("a.txt");
+//	vector<inst> a=get_inst(lines);
+//	method me("a",a);
+//	me.print();
+
 //	cout<<inif(lines,0);
 //	print_lines(lines);
 //	cout<<"no of lines is"<<lines.size()<<"\n";
+
+
+
 	vector<cla> res=findcl(lines);
 	//print_vars();
 //	vector<string> x;

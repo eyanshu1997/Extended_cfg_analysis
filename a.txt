@@ -1,27 +1,150 @@
-if (value < node.value)
-{
-	if (node.left != null)
-	{
-		insert(node.left, value)
-	}
-	else
-	{
-		System.out.println(" Inserted " + value + " to left of " + node.value)
-		node.left = new Node(value)
-	}
-}
-else
-	if (value > node.value)
-	{
-		if (node.right != null)
-		{
-			while ()
-				insert(node.right, value)
-		}
-		else
-		{
-			System.out.println("  Inserted " + value + " to right of "+ node.value)
-			node.right = new Node(value)
-		}
-	}
+Node
+Test
+method name is insert(Node node, int value)
+instructions are 
+type 2
+[
+ if statement    if (value < node.value)
+ no of instructions are 2
+instsurtcion 0
+type 2
+[
+ if statement    if (node.left != null)
+ no of instructions are 1
+instsurtcion 0
+type 1
+[unidentified insert(node.left, value)]
+
+
+]
+
+instsurtcion 1
+type 2
+[
+ if statement    else
+ no of instructions are 2
+instsurtcion 0
+type 1
+[System.out.println(" Inserted " + value + " to left of " + node.value)]
+
+instsurtcion 1
+type 1
+[unidentified node.left = new Node(value)]
+
+
+]
+
+
+]
+
+type 2
+[
+ if statement    else
+ no of instructions are 1
+instsurtcion 0
+type 2
+[
+ if statement    if (value > node.value)
+ no of instructions are 2
+instsurtcion 0
+type 2
+[
+ if statement    if (node.right != null)
+ no of instructions are 1
+instsurtcion 0
+type 1
+[unidentified insert(node.right, value)]
+
+
+]
+
+instsurtcion 1
+type 2
+[
+ if statement    else
+ no of instructions are 2
+instsurtcion 0
+type 1
+[System.out.println("  Inserted " + value + " to right of "+ node.value)]
+
+instsurtcion 1
+type 1
+[unidentified node.right = new Node(value)]
+
+
+]
+
+
+]
+
+
+]
+
+
+
+method name is traverseInOrder(Node node)
+instructions are 
+type 2
+[
+ if statement    if (node != null)
+ no of instructions are 3
+instsurtcion 0
+type 1
+[unidentified traverseInOrder(node.left)]
+
+instsurtcion 1
+type 1
+[System.out.print(" " + node.value)]
+
+instsurtcion 2
+type 1
+[unidentified traverseInOrder(node.right)]
+
+
+]
+
+
+
+method name is main(String args[])
+instructions are 
+type 1
+[initialization statement Test tree]
+
+type 1
+[initialization statement Node root]
+
+type 1
+[System.out.println("Binary Tree Example")]
+
+type 1
+[System.out.println("Building tree with root value " + root.value)]
+
+type 1
+[unidentified tree.insert(root, 2)]
+
+type 1
+[unidentified tree.insert(root, 4)]
+
+type 1
+[unidentified tree.insert(root, 8)]
+
+type 1
+[unidentified tree.insert(root, 6)]
+
+type 1
+[unidentified tree.insert(root, 7)]
+
+type 1
+[unidentified tree.insert(root, 3)]
+
+type 1
+[unidentified tree.insert(root, 9)]
+
+type 1
+[System.out.println("Traversing tree in order")]
+
+type 1
+[unidentified tree.traverseInOrder(root)]
+
+
 
