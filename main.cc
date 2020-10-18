@@ -2,6 +2,7 @@
 #include "classes.cc"
 vector<string> data_types={"int","String","byte","short","long","float","double","boolean","char","void"};
 vector<string> modifiers={"public","private","protected"};
+vector<variables> vars;
 vector<string> inbr(vector<string>lines)
 {
 	vector<string>li;
@@ -23,6 +24,72 @@ vector<string> inbr(vector<string>lines)
 	}
 	return li;
 }
+void print_vars()
+{
+	for(auto a:vars)
+	{
+		cout<<"class "<<a.class_name<<" name "<<a.name<<"\n"; 
+	}
+}
+bool checkinit(string line)
+{
+	int s=line.find(" ");
+	string ac=line.substr(0,s);
+	//cout<<"checking ["<<ac<<"]\n";
+	auto it=find(data_types.begin(),data_types.end(),ac);
+	if(it==data_types.end())
+		return false;
+	return true;
+}
+inst get_inst(vector<string> in_ml,int cc)
+{
+	if(cc<in_ml.size())
+	{
+		if(in_ml[cc].find("System.out.print")==string::npos)
+			if(checkinit(in_ml[cc]))
+			{
+				//cout<<"initialization statement "<<in_ml[cc]<<"\n";
+				int s=in_ml[cc].find(" ");
+				string tmp=in_ml[cc].substr(s+1,in_ml[cc].size()-s-1);
+				s=tmp.find(" ");
+				tmp=tmp.substr(0,s);
+				string cl=in_ml[cc].substr(0,s);
+				variables z(cl,tmp);
+				vars.push_back(z);
+				return inst("initialization statement "+cl+" "+tmp);
+			}
+			else
+			{
+				//cout<<in_ml[cc]<<"\n";
+				//x.push_back(in_ml[cc]);
+				//me.add(new inst(in_ml[cc]));
+				if(in_ml[cc].find("if")!=string::npos)
+				{
+					return inst("if "+in_ml[cc]);
+				}
+				else
+					return inst(in_ml[cc]);
+			}
+		else
+		{
+			//x.push_back("print statement "+in_ml[cc]);
+			return inst(in_ml[cc]);
+		}
+	}
+}
+method promethod(vector<string> in_ml,string na)
+{
+	//vector<string> x;
+	method me(na);
+	int cc=0;
+	while(cc<in_ml.size())
+	{
+		inst a=get_inst(in_ml,cc);
+		me.add(a);
+		cc++;
+	}
+	return me;
+}
 vector<cla> findcl(vector<string> lines)
 {
 	vector<cla> tmp;
@@ -35,7 +102,7 @@ vector<cla> findcl(vector<string> lines)
 		}
 		int c=lines[pc].find("class");
 		string na=trim(lines[pc].substr(c+5,lines[pc].size()-c-5));
-		cout<<na<<"\n";
+		//cout<<na<<"\n";
 		data_types.push_back(na);
 		//print_lines(data_types);
 		vector<string> cl(lines.begin()+pc+1,lines.end());
@@ -49,11 +116,11 @@ vector<cla> findcl(vector<string> lines)
 			string z=trim(na)+"(";
 			if(x.find(z)==0)
 			{
-				cout<<"constructor\n";
+				//cout<<"constructor\n";
 				vector<string>ml(in_class.begin()+cc+1,in_class.end());
 				//print_lines(ml);
 				vector<string> in_ml=inbr(ml);
-				print_lines(in_ml);
+				//print_lines(in_ml);
 				cc=cc+in_ml.size()+3;
 				
 			}
@@ -77,7 +144,28 @@ vector<cla> findcl(vector<string> lines)
 					}
 					else
 					{
-						cout<<"initialization statement "<<ac<<" "<<re<<"\n";
+						int s=re.find(",");
+						if(s==string::npos)
+						{
+							//cout<<"initialization statement "<<ac<<" "<<re<<"\n";
+							variables z(ac,re);
+							vars.push_back(z);
+						}
+						else
+						{
+							//cout<<"ac "<<ac<<"\n";
+							while(s!=string::npos)
+							{
+								string var=trim(re.substr(0,s));
+								variables z(ac,var);
+								vars.push_back(z);
+								re=trim(re.substr(s+1,re.size()-s-1));
+								s=re.find(",");
+							}
+							variables z(ac,re);
+							vars.push_back(z);
+							
+						}
 					}
 					cc++;
 					
@@ -105,10 +193,13 @@ vector<cla> findcl(vector<string> lines)
 					else
 					{
 						string na=re.substr(s+1,re.size()-s-1);
-						cout<<"method name "<<na<<"\n";
+						//	cout<<"method name "<<na<<"\n";
 						vector<string>ml(in_class.begin()+cc+1,in_class.end());
 						vector<string> in_ml=inbr(ml);
-						print_lines(in_ml);
+						//print_lines(in_ml);
+						cout<<"\n\n\n";
+						method me=promethod(in_ml,na);
+						me.print();
 						cc=cc+in_ml.size()+3;
 					}
 					
@@ -128,6 +219,7 @@ int main()
 //	print_lines(lines);
 	cout<<"no of lines is"<<lines.size()<<"\n";
 	vector<cla> res=findcl(lines);
+	//print_vars();
 //	vector<string> x;
 //	for(int i=2;i<lines.size();i++)
 //		x.push_back(lines[i]);
