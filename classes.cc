@@ -27,7 +27,7 @@ class inst
 	}
 	inst(string a,int x)
 	{
-		type=3;
+		type=4;
 		instruction=a;
 	}
 	void process(cla *b);
@@ -100,9 +100,9 @@ class method
 	void process(cla *b)
 	{
 		
-		for(auto a:instlist)
+		for(auto it= instlist.begin();it!=instlist.end();it++)
 		{
-			a.process(b);
+			(it)->process(b);
 		}
 		
 	}
@@ -156,8 +156,8 @@ class cla
 	}
 	void process()
 	{
-		for(auto a:methodlist)
-			a.process(this);
+		for(auto it=methodlist.begin();it!=methodlist.end();it++)
+			(it)->process(this);
 	}
 	bool contains(string x)
 	{
@@ -173,11 +173,11 @@ class cla
 void inst::process(cla *b)
 {
 	// a.function() or function()
-	for(auto a:instlist)
+	for(auto it= instlist.begin();it!=instlist.end();it++)
 	{
-		a.process(b);
+		(it)->process(b);
 	}
-	if(type==3)
+	if(type==4)
 	{
 		//cout<<"called for instruction "<<instruction<<"\n";
 		int s=instruction.find("(");

@@ -2,19 +2,19 @@ name of class Node
 no of methods 1
 method name is Node
 instructions are 
-type 3
+type 4
 
 [this.value = value
 class is 
 method is ]
 
-type 3
+type 4
 
 [left = null
 class is 
 method is ]
 
-type 3
+type 4
 
 [right = null
 class is 
@@ -40,7 +40,7 @@ type 2
  if statement    if (node.left != null)
  no of instructions are 1
 instsurtcion 0
-type 3
+type 4
 
 [insert(node.left, value)
 class is 
@@ -59,7 +59,7 @@ type 1
 [System.out.println(" Inserted " + value + " to left of " + node.value)]
 
 instsurtcion 1
-type 3
+type 4
 
 [node.left = new Node(value)
 class is 
@@ -86,7 +86,7 @@ type 2
  if statement    if (node.right != null)
  no of instructions are 1
 instsurtcion 0
-type 3
+type 4
 
 [insert(node.right, value)
 class is 
@@ -105,7 +105,7 @@ type 1
 [System.out.println("  Inserted " + value + " to right of "+ node.value)]
 
 instsurtcion 1
-type 3
+type 4
 
 [node.right = new Node(value)
 class is 
@@ -129,7 +129,7 @@ type 2
  if statement    if (node != null)
  no of instructions are 3
 instsurtcion 0
-type 3
+type 4
 
 [traverseInOrder(node.left)
 class is 
@@ -140,7 +140,7 @@ type 1
 [System.out.print(" " + node.value)]
 
 instsurtcion 2
-type 3
+type 4
 
 [traverseInOrder(node.right)
 class is 
@@ -165,43 +165,43 @@ type 1
 type 1
 [System.out.println("Building tree with root value " + root.value)]
 
-type 3
+type 4
 
 [tree.insert(root, 2)
 class is 
 method is ]
 
-type 3
+type 4
 
 [tree.insert(root, 4)
 class is 
 method is ]
 
-type 3
+type 4
 
 [tree.insert(root, 8)
 class is 
 method is ]
 
-type 3
+type 4
 
 [tree.insert(root, 6)
 class is 
 method is ]
 
-type 3
+type 4
 
 [tree.insert(root, 7)
 class is 
 method is ]
 
-type 3
+type 4
 
 [tree.insert(root, 3)
 class is 
 method is ]
 
-type 3
+type 4
 
 [tree.insert(root, 9)
 class is 
@@ -210,7 +210,7 @@ method is ]
 type 1
 [System.out.println("Traversing tree in order")]
 
-type 3
+type 4
 
 [tree.traverseInOrder(root)
 class is 
@@ -219,23 +219,35 @@ method is ]
 
 
 no of variables is 0
+res insert Test
+
+
+res insert Test
+
+
+res traverseInOrder Test
+
+
+res traverseInOrder Test
+
+
 name of class Node
 no of methods 1
 method name is Node
 instructions are 
-type 3
+type 4
 
 [this.value = value
 class is 
 method is ]
 
-type 3
+type 4
 
 [left = null
 class is 
 method is ]
 
-type 3
+type 4
 
 [right = null
 class is 
@@ -261,7 +273,7 @@ type 2
  if statement    if (node.left != null)
  no of instructions are 1
 instsurtcion 0
-type 3
+type 4
 
 [insert(node.left, value)
 class is 
@@ -280,7 +292,7 @@ type 1
 [System.out.println(" Inserted " + value + " to left of " + node.value)]
 
 instsurtcion 1
-type 3
+type 4
 
 [node.left = new Node(value)
 class is 
@@ -307,7 +319,7 @@ type 2
  if statement    if (node.right != null)
  no of instructions are 1
 instsurtcion 0
-type 3
+type 4
 
 [insert(node.right, value)
 class is 
@@ -326,7 +338,7 @@ type 1
 [System.out.println("  Inserted " + value + " to right of "+ node.value)]
 
 instsurtcion 1
-type 3
+type 4
 
 [node.right = new Node(value)
 class is 
@@ -350,7 +362,7 @@ type 2
  if statement    if (node != null)
  no of instructions are 3
 instsurtcion 0
-type 3
+type 4
 
 [traverseInOrder(node.left)
 class is 
@@ -361,7 +373,7 @@ type 1
 [System.out.print(" " + node.value)]
 
 instsurtcion 2
-type 3
+type 4
 
 [traverseInOrder(node.right)
 class is 
@@ -386,43 +398,43 @@ type 1
 type 1
 [System.out.println("Building tree with root value " + root.value)]
 
-type 3
+type 4
 
 [tree.insert(root, 2)
 class is 
 method is ]
 
-type 3
+type 4
 
 [tree.insert(root, 4)
 class is 
 method is ]
 
-type 3
+type 4
 
 [tree.insert(root, 8)
 class is 
 method is ]
 
-type 3
+type 4
 
 [tree.insert(root, 6)
 class is 
 method is ]
 
-type 3
+type 4
 
 [tree.insert(root, 7)
 class is 
 method is ]
 
-type 3
+type 4
 
 [tree.insert(root, 3)
 class is 
 method is ]
 
-type 3
+type 4
 
 [tree.insert(root, 9)
 class is 
@@ -431,7 +443,7 @@ method is ]
 type 1
 [System.out.println("Traversing tree in order")]
 
-type 3
+type 4
 
 [tree.traverseInOrder(root)
 class is 
