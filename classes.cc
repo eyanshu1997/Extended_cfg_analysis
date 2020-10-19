@@ -25,6 +25,12 @@ class inst
 		me=c;
 		
 	}
+	inst(string a,int x)
+	{
+		type=3;
+		instruction=a;
+	}
+	void process(cla *b);
 	void print()
 	{
 		cout<<"type "<<type<<"\n";
@@ -54,15 +60,30 @@ class method
 {
 	public:
 	string name;
+	string n;
 	vector<inst> instlist;
 	method(string na)
 	{
-		name=na;
+		n=na;
+		int s=na.find("(");
+		if(s!=string::npos)
+		{
+			name=trim(na.substr(0,s));
+		}
+		else
+			name=na;
 	}
 	method(string na,vector<inst> a)
 	{
-		name=na;
+		n=na;
 		instlist=a;
+		int s=na.find("(");
+		if(s!=string::npos)
+		{
+			name=trim(na.substr(0,s));
+		}
+		else
+			name=na;
 	}
 	void print()
 	{
@@ -76,13 +97,15 @@ class method
 	{
 		instlist.push_back(a);
 	}
-};
-class cla
-{
-	public:
-	string name;
-	vector<pair<string,string>> vars;
-	vector<method> methodlist;
+	void process(cla *b)
+	{
+		
+		for(auto a:instlist)
+		{
+			a.process(b);
+		}
+		
+	}
 };
 class variables
 {
@@ -94,7 +117,129 @@ class variables
 		class_name=a;
 		name=b;
 	}
-	
+	void print()
+	{
+		cout<<"data type "<<class_name<<" name "<<name<<"\n";
+	}
 };
 
+
+class cla
+{
+	public:
+	string name;
+	vector<variables> vars;
+	vector<method> methodlist;
+	cla(string n)
+	{
+		name=n;
+	}
+	void add(method m)
+	{
+		methodlist.push_back(m);
+	}
+	void add(variables v)
+	{
+		vars.push_back(v);
+	}
+	void print()
+	{
+		cout<<"name of class "<<name <<"\n";
+		cout<<"no of methods "<<methodlist.size()<<"\n";
+		for(auto a :methodlist)
+			a.print();
+		cout<<"no of variables is "<<vars.size()<<"\n";
+		for(auto a:vars)
+		{
+			a.print();
+		}
+	}
+	void process()
+	{
+		for(auto a:methodlist)
+			a.process(this);
+	}
+	bool contains(string x)
+	{
+		for(auto a:methodlist)
+		{
+			//cout<<"checking "<<x<<" "<<a.name<<"\n";
+			if(a.name==x)
+				return true;
+		}
+		return false;
+	}
+};
+void inst::process(cla *b)
+{
+	// a.function() or function()
+	for(auto a:instlist)
+	{
+		a.process(b);
+	}
+	if(type==3)
+	{
+		//cout<<"called for instruction "<<instruction<<"\n";
+		int s=instruction.find("(");
+		if(s!=string::npos)
+		{
+			string x=instruction.substr(0,s);
+			x=trim(x);
+			//cout<<"(found"<<x<<"\n";
+			int y=x.rfind(" ");
+			x=x.substr(y+1,x.size());
+			int z=x.find(".");
+			if(z==string::npos)
+			{
+				//cout<<". not found "<<x<<"\n";
+				if(b->contains(trim(x))==true)
+				{
+					cout<<"res "<<x<<" "<<b->name<<"\n\n\n";
+					type=3;
+					me=x;
+					cl=b->name;
+				}
+				else
+				{
+					//cout<<"1 instruction\n\n\n";
+					instruction="unidentified "+instruction;
+					type=1;
+				}
+			}
+			else
+			{
+				string na=x.substr(0,z);
+				x=x.substr(z+1,x.size());
+				//cout<<na<<" . found "<<x<<"\n";
+				bool set=true;
+				for(auto a:classes)
+				{
+					if(trim(a.name)==trim(na))
+					{
+						if(a.contains(trim(x)))
+						{
+							cout<<"res "<<x<<" "<<a.name<<"\n\n\n";
+							type=3;
+							me=x;
+							cl=a.name;
+							set=false;
+						}
+					}
+				}
+				if(set==true)
+				{
+					//cout<<"1..2 instruction\n\n\n";
+					type=1;
+					instruction="unidentified "+instruction;
+				}
+			}
+		}
+		else
+		{
+			//cout<<"1..3 instruction\n\n\n";
+			type=1;
+			instruction="unidentified "+instruction;
+		}
+	}
+}
 

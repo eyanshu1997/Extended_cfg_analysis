@@ -1,6 +1,4 @@
-#include<bits/stdc++.h>
-using namespace std;
-string WHITESPACE = " \n\r\t\f\v";
+
 
 void print_lines(vector<string> lines)
 {

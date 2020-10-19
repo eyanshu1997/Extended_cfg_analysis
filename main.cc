@@ -1,10 +1,20 @@
-#include "parser.cc"
-#include "classes.cc"
+#include<bits/stdc++.h>
+using namespace std;
+class variables;
+class cla;
+
+string WHITESPACE = " \n\r\t\f\v";
 vector<string> data_types={"int","String","byte","short","long","float","double","boolean","char","void"};
 vector<string> modifiers={"public","private","protected"};
 vector<string>cond={"if","else"};
 vector<string>loop={"while","for"};
+
 vector<variables> vars;
+vector<cla> classes;
+#include "parser.cc"
+#include "classes.cc"
+
+
 vector<string> inbr(vector<string>lines)
 {
 	vector<string>li;
@@ -207,7 +217,7 @@ vector<inst> get_inst(vector<string> in_ml)
 					}
 					if(s==false)
 					{
-						ins.push_back("unidentified "+in_ml[cc]);
+						ins.push_back(inst(in_ml[cc],3));
 						cc++;
 					}
 				}
@@ -240,7 +250,8 @@ vector<cla> findcl(vector<string> lines)
 		}
 		int c=lines[pc].find("class");
 		string na=trim(lines[pc].substr(c+5,lines[pc].size()-c-5));
-		cout<<na<<"\n";
+		//cout<<na<<"\n";
+		cla clas(na);
 		data_types.push_back(na);
 		//print_lines(data_types);
 		vector<string> cl(lines.begin()+pc+1,lines.end());
@@ -258,6 +269,8 @@ vector<cla> findcl(vector<string> lines)
 				vector<string>ml(in_class.begin()+cc+1,in_class.end());
 				//print_lines(ml);
 				vector<string> in_ml=inbr(ml);
+				method me=promethod(in_ml,na);
+				clas.add(me);
 				//print_lines(in_ml);
 				cc=cc+in_ml.size()+3;
 				
@@ -288,20 +301,24 @@ vector<cla> findcl(vector<string> lines)
 							//cout<<"initialization statement "<<ac<<" "<<re<<"\n";
 							variables z(ac,re);
 							vars.push_back(z);
+							clas.add(z);
 						}
 						else
 						{
+							//int a,b;
 							//cout<<"ac "<<ac<<"\n";
 							while(s!=string::npos)
 							{
 								string var=trim(re.substr(0,s));
 								variables z(ac,var);
 								vars.push_back(z);
+								clas.add(z);
 								re=trim(re.substr(s+1,re.size()-s-1));
 								s=re.find(",");
 							}
 							variables z(ac,re);
 							vars.push_back(z);
+							clas.add(z);
 							
 						}
 					}
@@ -337,15 +354,18 @@ vector<cla> findcl(vector<string> lines)
 						//print_lines(in_ml);
 						//cout<<"\n\n\n";
 						method me=promethod(in_ml,na);
-						me.print();
+//						me.print();
+						clas.add(me);
 						cc=cc+in_ml.size()+3;
 					}
 					
 				}
 			}
 		}
+
 		pc=pc+in_class.size()+3;
 		//cout<<"pc is"<<pc<<"\n";
+		tmp.push_back(clas);
 	}
 	return tmp;
 }
@@ -368,6 +388,18 @@ int main()
 
 
 	vector<cla> res=findcl(lines);
+	classes=res;
+	for(auto a:res)
+	{
+		a.print();
+		a.process();
+		//a.print();
+	}
+	for(auto a:res)
+	{
+		a.print();
+	}
+	
 	//print_vars();
 //	vector<string> x;
 //	for(int i=2;i<lines.size();i++)

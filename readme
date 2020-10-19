@@ -1,0 +1,55 @@
+				I had to develop a cfg analysis of java program 
+				the languyage i used is c++.
+				so  as in case of a compiler ihad to parse the whole program and cobnvert it into a intermediate form for teh analysis.
+				this was done by use of a parser written.
+
+
+
+this is a function used to print a vector of string
+
+these three functions are used to trima string
+
+this function is basicallyused to move everything after else toa next line
+
+
+handle rb function basically takes a line finds the br string and splits what is after and before br as well as br into three lines it is used to handle { } as well as if
+
+this function removes extra lines 
+parse function does the actual parsing ofthe input file and returns a intermidiate parsed file.
+
+
+
+
+
+the next file is classees file which is used to dicribe the various clases used.this is still in work in development and i am changing structure of class as and when  the use case changes
+
+inst class is used to store a instruction 
+type defines three types of instructions 
+]instlist containts a list of instructions insed a bracketof ifor while etc
+
+instruction stores the dactual instructions. 
+
+method class is used to stpore a fucntion
+
+
+cla uclas is used to store a classees
+variavle class stores the variavbles.
+
+
+jnext is the main class it contains many functions which aree still in progress
+
+{
+
+}
+
+
+1 if
+
+2{
+3}
+else
+4 {
+}
+5if
+
+
