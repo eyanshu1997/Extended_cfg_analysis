@@ -145,14 +145,15 @@ class cla
 	void print()
 	{
 		cout<<"name of class "<<name <<"\n";
-		cout<<"no of methods "<<methodlist.size()<<"\n";
-		for(auto a :methodlist)
-			a.print();
 		cout<<"no of variables is "<<vars.size()<<"\n";
 		for(auto a:vars)
 		{
 			a.print();
 		}
+		cout<<"no of methods "<<methodlist.size()<<"\n";
+		for(auto a :methodlist)
+			a.print();
+	
 	}
 	void process()
 	{
@@ -194,7 +195,7 @@ void inst::process(cla *b)
 				//cout<<". not found "<<x<<"\n";
 				if(b->contains(trim(x))==true)
 				{
-					cout<<"res "<<x<<" "<<b->name<<"\n\n\n";
+					//cout<<"res "<<x<<" "<<b->name<<"\n\n\n";
 					type=3;
 					me=x;
 					cl=b->name;
@@ -212,17 +213,21 @@ void inst::process(cla *b)
 				x=x.substr(z+1,x.size());
 				//cout<<na<<" . found "<<x<<"\n";
 				bool set=true;
-				for(auto a:classes)
+				for(auto v:vars)
 				{
-					if(trim(a.name)==trim(na))
+					if(na==v.name)
+					for(auto a:classes)
 					{
-						if(a.contains(trim(x)))
+						if(trim(a.name)==trim(v.class_name))
 						{
-							cout<<"res "<<x<<" "<<a.name<<"\n\n\n";
-							type=3;
-							me=x;
-							cl=a.name;
-							set=false;
+							if(a.contains(trim(x)))
+							{
+								//cout<<"res "<<x<<" "<<a.name<<"\n\n\n";
+								type=3;
+								me=x;
+								cl=a.name;
+								set=false;
+							}
 						}
 					}
 				}
