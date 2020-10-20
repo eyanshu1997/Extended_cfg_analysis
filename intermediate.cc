@@ -109,13 +109,17 @@ vector<inst> get_inst(vector<string> in_ml)
 			{
 				//cout<<"initialization statement "<<in_ml[cc]<<"\n";
 				int s=in_ml[cc].find(" ");
+				string cl=in_ml[cc].substr(0,s);
 				string tmp=in_ml[cc].substr(s+1,in_ml[cc].size()-s-1);
 				s=tmp.find(" ");
 				tmp=tmp.substr(0,s);
-				string cl=in_ml[cc].substr(0,s);
+				s=tmp.find("=");
+				if(s!=string::npos)
+					tmp=tmp.substr(0,s);
+				tmp=trim(tmp);
 				variables z(cl,tmp);
 				vars.push_back(z);
-				ins.push_back(inst("initialization statement "+cl+" "+tmp));
+				ins.push_back(inst(in_ml[cc],cl,tmp,5));
 				cc++;
 			}
 			else
@@ -200,7 +204,7 @@ vector<inst> get_inst(vector<string> in_ml)
 					}
 					if(s==false)
 					{
-						ins.push_back(inst(in_ml[cc],3));
+						ins.push_back(inst(in_ml[cc],4));
 						cc++;
 					}
 				}

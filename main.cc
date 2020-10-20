@@ -29,15 +29,36 @@ void printinst()
 	{
 		for (auto itm = it->methodlist.begin(); itm != it->methodlist.end(); itm += 1)
 		{
+			cout<<"method is "<<itm->name<<"\n";
 			for (auto iti = itm->instlist.begin(); iti != itm->instlist.end(); iti += 1)
 			{
 				reprint(iti);
 			}
+			cout<<"\n";
 		}
 	}
 }
-int main()
+unordered_map<int,method> methodmap;
+void mapmethods()
+{
+	for(auto a:classes)
+	{
+		for (auto b:a.methodlist)
+		{
+			methodmap[b.no]=b;	
+		}
+	}
+}
+void init()
 {
 	intermediate();
+	mapmethods();
+}
+int main()
+{
+	init();
 	printinst();
+	
+	//methodmap[1].print();
+	//printall();
 }

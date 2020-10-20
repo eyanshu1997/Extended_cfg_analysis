@@ -1,0 +1,84 @@
+method is Node
+0 unidentified this.value = value
+1 unidentified left = null
+2 unidentified right = null
+
+method is insert
+3 if (value < node.value)
+4 if (node.left != null)
+5 insert(node.left, value)
+class is Test
+method no is1
+method is insert
+6 else
+7 System.out.println(" Inserted " + value + " to left of " + node.value)
+8 node.left = new Node(value)
+9 else
+10 if (value > node.value)
+11 if (node.right != null)
+12 insert(node.right, value)
+class is Test
+method no is1
+method is insert
+13 else
+14 System.out.println("  Inserted " + value + " to right of "+ node.value)
+15 node.right = new Node(value)
+
+method is traverseInOrder
+16 if (node != null)
+17 traverseInOrder(node.left)
+class is Test
+method no is2
+method is traverseInOrder
+18 System.out.print(" " + node.value)
+19 traverseInOrder(node.right)
+class is Test
+method no is2
+method is traverseInOrder
+
+method is main
+20 int a=1
+varname is a
+datatype isint
+21 Test tree = new Test()
+varname is tree
+datatype isTest
+22 Node root = new Node(5)
+varname is root
+datatype isNode
+23 System.out.println("Binary Tree Example")
+24 System.out.println("Building tree with root value " + root.value)
+25 tree.insert(root, 2)
+class is Test
+method no is1
+method is insert
+26 tree.insert(root, 4)
+class is Test
+method no is1
+method is insert
+27 tree.insert(root, 8)
+class is Test
+method no is1
+method is insert
+28 tree.insert(root, 6)
+class is Test
+method no is1
+method is insert
+29 tree.insert(root, 7)
+class is Test
+method no is1
+method is insert
+30 tree.insert(root, 3)
+class is Test
+method no is1
+method is insert
+31 tree.insert(root, 9)
+class is Test
+method no is1
+method is insert
+32 System.out.println("Traversing tree in order")
+33 tree.traverseInOrder(root)
+class is Test
+method no is2
+method is traverseInOrder
+

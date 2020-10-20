@@ -4,9 +4,11 @@ class inst
 	int type; //1 for simple    2 for loop or if     3 for function call
 	string instruction;
 	vector<inst> instlist;
+	string datatyp,varname;
 	string me;
 	string cl;
 	int meno;
+	bool linked=false;
 	int no=-1;
 	inst(string in)
 	{
@@ -26,20 +28,41 @@ class inst
 		//no=instructioncount++;
 		type=3;
 		instruction=a;
-		cl=b;
-		me=c;
+		linked=true;
+		cl=trim(b);
+		me=trim(c);
 		
 	}
 	inst(string a,int x)
 	{
 		//no=instructioncount++;
-		type=4;
+		type=x;
 		instruction=a;
 	}
+	inst(string a,string b,string c,int x)
+	{
+		instruction=a;
+		varname=trim(c);
+		datatyp=trim(b);
+		//linked=true;
+		type=5;
+	}
+
 	void process(cla *b);
 	void cprint()
 	{
 		cout<<no<<" "<<instruction<<"\n";
+		if(type==5)
+		{
+			cout<<"varname is "<<varname<<"\n";
+			cout<<"datatype is"<<datatyp<<"\n";
+		}
+		if(linked==true)
+		{
+			cout<<"class is "<<cl<<"\n";
+			cout<<"method no is"<<meno<<"\n";
+			cout<<"method is "<<me<<"\n";
+		}
 	}
 	void print()
 	{
@@ -59,10 +82,20 @@ class inst
 		}
 		else
 		{
-			cout<<"\n["<<instruction<<"\n";
-			cout<<"class is "<<cl<<"\n";
-			cout<<"method no is"<<meno<<"\n";
-			cout<<"method is "<<me<<"]\n\n";
+			if(type==5)
+			{
+				cout<<"\n["<<instruction<<"\n";
+				cout<<"varname is "<<varname<<"\n";
+				cout<<"datatype is"<<datatyp<<"\n";
+				cout<<"type is "<<type<<"]\n\n";
+			}
+			else
+			{
+				cout<<"\n["<<instruction<<"\n";
+				cout<<"class is "<<cl<<"\n";
+				cout<<"method no is"<<meno<<"\n";
+				cout<<"method is "<<me<<"]\n\n";
+			}
 		}
 		
 	}
@@ -74,6 +107,13 @@ class method
 	string name;
 	string n;
 	vector<inst> instlist;
+	bool operator==(const method& p) const
+	{ 
+		return name == p.name&&n==p.n&&no==p.no; 
+	} 
+	method()
+	{
+	}
 	method(string na,int meno)
 	{
 		no=meno;
