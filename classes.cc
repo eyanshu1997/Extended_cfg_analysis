@@ -6,19 +6,24 @@ class inst
 	vector<inst> instlist;
 	string me;
 	string cl;
+	int meno;
+	int no=-1;
 	inst(string in)
 	{
+		//no=instructioncount++;
 		type=1;
 		instruction=in;
 	}
 	inst(string a,vector<inst> x)
 	{
+		//no=instructioncount++;
 		type=2;
 		instruction=a;
 		instlist=x;
 	}
 	inst(string a,string b,string c)
 	{
+		//no=instructioncount++;
 		type=3;
 		instruction=a;
 		cl=b;
@@ -27,13 +32,18 @@ class inst
 	}
 	inst(string a,int x)
 	{
+		//no=instructioncount++;
 		type=4;
 		instruction=a;
 	}
 	void process(cla *b);
+	void cprint()
+	{
+		cout<<no<<" "<<instruction<<"\n";
+	}
 	void print()
 	{
-		cout<<"type "<<type<<"\n";
+		cout<<"instrcution count is "<<no<<"\ntype "<<type<<"\n";
 		if(type==1)
 			cout<<"["<<instruction<<"]\n\n";
 		else if(type==2)
@@ -51,6 +61,7 @@ class inst
 		{
 			cout<<"\n["<<instruction<<"\n";
 			cout<<"class is "<<cl<<"\n";
+			cout<<"method no is"<<meno<<"\n";
 			cout<<"method is "<<me<<"]\n\n";
 		}
 		
@@ -59,11 +70,13 @@ class inst
 class method
 {
 	public:
+	int no;
 	string name;
 	string n;
 	vector<inst> instlist;
-	method(string na)
+	method(string na,int meno)
 	{
+		no=meno;
 		n=na;
 		int s=na.find("(");
 		if(s!=string::npos)
@@ -73,8 +86,9 @@ class method
 		else
 			name=na;
 	}
-	method(string na,vector<inst> a)
+	method(string na,vector<inst> a,int meno)
 	{
+		no=meno;
 		n=na;
 		instlist=a;
 		int s=na.find("(");
@@ -87,7 +101,7 @@ class method
 	}
 	void print()
 	{
-		cout<<"method name is "<<name<<"\n";
+		cout<<"method name is "<<name<<" no is "<<no<<"\n";
 		cout<<"instructions are \n";
 		for(auto a:instlist)
 			a.print();
@@ -160,15 +174,15 @@ class cla
 		for(auto it=methodlist.begin();it!=methodlist.end();it++)
 			(it)->process(this);
 	}
-	bool contains(string x)
+	int contains(string x)
 	{
 		for(auto a:methodlist)
 		{
 			//cout<<"checking "<<x<<" "<<a.name<<"\n";
 			if(a.name==x)
-				return true;
+				return a.no;
 		}
-		return false;
+		return -1;
 	}
 };
 void inst::process(cla *b)
@@ -193,17 +207,19 @@ void inst::process(cla *b)
 			if(z==string::npos)
 			{
 				//cout<<". not found "<<x<<"\n";
-				if(b->contains(trim(x))==true)
+				int s=b->contains(trim(x));
+				if(s>0)
 				{
 					//cout<<"res "<<x<<" "<<b->name<<"\n\n\n";
 					type=3;
+					meno=s;
 					me=x;
 					cl=b->name;
 				}
 				else
 				{
 					//cout<<"1 instruction\n\n\n";
-					instruction="unidentified "+instruction;
+					//instruction="unidentified "+instruction;
 					type=1;
 				}
 			}
@@ -220,11 +236,13 @@ void inst::process(cla *b)
 					{
 						if(trim(a.name)==trim(v.class_name))
 						{
-							if(a.contains(trim(x)))
+							int s=a.contains(trim(x));
+							if(s>0)
 							{
 								//cout<<"res "<<x<<" "<<a.name<<"\n\n\n";
 								type=3;
 								me=x;
+								meno=s;
 								cl=a.name;
 								set=false;
 							}
@@ -235,7 +253,7 @@ void inst::process(cla *b)
 				{
 					//cout<<"1..2 instruction\n\n\n";
 					type=1;
-					instruction="unidentified "+instruction;
+					//instruction="unidentified "+instruction;
 				}
 			}
 		}
@@ -248,3 +266,22 @@ void inst::process(cla *b)
 	}
 }
 
+class cfg
+{
+	unordered_map<int,string> instructions;
+	vector<vector<int>> adj;
+	void print()	
+	{
+		for(auto a:instructions)
+		{
+			cout<<a.first<<" "<<a.second<<"\n";
+		}
+		for(auto a:adj)
+		{	for(auto b:a)
+				cout<<b<<" ";
+			cout<<"\n";
+		}
+		cout<<"\n";
+			
+	}
+};

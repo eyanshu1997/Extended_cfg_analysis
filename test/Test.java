@@ -47,6 +47,7 @@ else
      
      public static void main(String args[]) 
     { 
+    int a=1;
     Test tree = new Test();
                 Node root = new Node(5);
                 System.out.println("Binary Tree Example");

@@ -1,4 +1,3 @@
-
 vector<string> inbr(vector<string>lines)
 {
 	vector<string>li;
@@ -219,7 +218,9 @@ method promethod(vector<string> in_ml,string na)
 {
 	//vector<string> x;
 	vector<inst> a=get_inst(in_ml);
-	method me(na,a);
+	int x=methodcount++;
+	method me(na,a,x);
+	//methodmap[x]=me;
 	return me;
 }
 vector<cla> findcl(vector<string> lines)
@@ -353,6 +354,14 @@ vector<cla> findcl(vector<string> lines)
 	}
 	return tmp;
 }
+void assignno(vector<inst>::iterator x)
+{
+	x->no=instructioncount++;
+	for (auto it = x->instlist.begin(); it != x->instlist.end(); it += 1)
+	{
+		assignno(it);
+	}
+}
 void intermediate()
 {
 		//string line="class node{";
@@ -377,6 +386,16 @@ void intermediate()
 //		it->print();
 		it->process();
 		//a.print();	
+	}
+	for (auto it = res.begin(); it != res.end(); it += 1)
+	{
+		for (auto im = (it->methodlist).begin(); im != (it->methodlist).end(); im += 1)
+		{
+			for (auto iti = im->instlist.begin(); iti != im->instlist.end(); iti += 1)
+			{
+				assignno(iti);
+			}
+		}
 	}
 	classes=res;
 	//print_vars();
