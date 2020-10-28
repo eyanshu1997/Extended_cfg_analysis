@@ -43,7 +43,26 @@ vector<string> handleelse(string line)
 	return x;
 	
 }
-
+vector<string> handlemod(string line)
+{
+	vector<string>z;
+	line=trim(line);
+	int s=line.find(" ");
+	string x=trim(line.substr(0,s));
+	auto it=find(modifiers.begin(),modifiers.end(),x);
+	while(it!=modifiers.end())
+	{
+		line=trim(line.substr(s+1,line.size()-s-1));
+		s=line.find(" ");
+		if(s!=string::npos)
+			x=trim(line.substr(0,s));
+		else
+			x=trim(line);
+		it=find(modifiers.begin(),modifiers.end(),x);
+	}
+	z.push_back(trim(line));
+	return z; 
+}
 vector<string> handlebr(string line,string br)
 {
 	//cout<<line;
@@ -51,6 +70,16 @@ vector<string> handlebr(string line,string br)
 	vector<string>lines;
 	size_t fo;
 	fo=line.rfind(br);
+	if(br==";")
+	{
+		int st=line.find("for(");
+		int se=line.find(")");
+		if(st<fo<se)
+		{
+			lines.push_back(line);
+			return lines;	
+		}
+	}
 	//cout<<fo<<"\n";
 	if(fo!=string::npos)
 	{
@@ -77,15 +106,23 @@ vector<string> handlebr(string line,string br)
 		lines.push_back(trim(line));
 	return lines;
 }
+bool check(string a)
+{
+	for(auto b:modifiers)
+		if(a.find(b+":")==0)
+			return false;
+	return true;
+}
 vector<string> rememp(vector<string> lines)
 {
 	vector<string> ne;
 	for(auto a:lines)
 	{
 		a=trim(a);
-		if(a!=""&&a!=";")
-			if(a.find("//")!=0)
-				ne.push_back(a);
+		if(a!=""&&a!=";"&&a!=":")
+			if(a.find("@")!=0)
+				if(check(a))
+					ne.push_back(a);
 	}
 	return ne;
 }
@@ -101,18 +138,25 @@ vector<string> parse(string f)
 	while(getline(fi,line))
 	{
 		line=trim(line);
-		vector<string> li=handlebr(line,"}");
-		for(auto x:li)
+		if(line.find("//")!=0)
 		{
-			vector<string> z=handlebr(x,"{");
-			for(auto y:z)
+			vector<string> li=handlebr(line,"}");
+			for(auto x:li)
 			{
-				vector<string> a=handlebr(y,";");
-				for(auto b:a)
+				vector<string> z=handlebr(x,"{");
+				for(auto y:z)
 				{
-					vector<string>c =handleelse(b);
-					for(auto d:c)
-						lines.push_back(trim(d));
+					vector<string> a=handlebr(y,";");
+					for(auto b:a)
+					{
+						vector<string>c =handleelse(b);
+						for(auto e:c)
+						{
+							vector<string>f=handlemod(e);
+							for(auto d:f)
+								lines.push_back(trim(d));
+						}
+					}
 				}
 			}
 		}

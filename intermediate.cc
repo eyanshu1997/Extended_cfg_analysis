@@ -241,6 +241,7 @@ method promethod(vector<string> in_ml,string na)
 	//methodmap[x]=me;
 	return me;
 }
+/*
 vector<cla> findcl(vector<string> lines)
 {
 	vector<cla> tmp;
@@ -252,15 +253,18 @@ vector<cla> findcl(vector<string> lines)
 			pc++;	
 		}
 		int c=lines[pc].find("class");
-		string na=trim(lines[pc].substr(c+5,lines[pc].size()-c-5));
+		string x=trim(lines[pc].substr(c+5,lines[pc].size()-c-5));
+		//cout<<x<<"\n";
+		c=x.find(" ");
+		string na=trim(x.substr(0,c));
 		//cout<<na<<"\n";
-		cla clas(na);
+		cla clas(na,x);
 		data_types.push_back(na);
 		//print_lines(data_types);
 		vector<string> cl(lines.begin()+pc+1,lines.end());
 		//print_lines(cl);
 		vector<string> in_class=inbr(cl);
-		//print_lines(in_class);
+		print_lines(in_class);
 		int cc=0;
 		while(cc<in_class.size())
 		{
@@ -268,9 +272,9 @@ vector<cla> findcl(vector<string> lines)
 			string z=trim(na)+"(";
 			if(x.find(z)==0)
 			{
-				//cout<<"constructor\n";
+				cout<<"constructor\n";
 				vector<string>ml(in_class.begin()+cc+1,in_class.end());
-				//print_lines(ml);
+				print_lines(ml);
 				vector<string> in_ml=inbr(ml);
 				method me=promethod(in_ml,na);
 				clas.add(me);
@@ -280,7 +284,6 @@ vector<cla> findcl(vector<string> lines)
 			}
 			else
 			{
-				
 				int s=x.find(" ");
 				string ac=x.substr(0,s);
 				//cout<<"checking "<<ac<<"\n";	
@@ -332,7 +335,9 @@ vector<cla> findcl(vector<string> lines)
 				else
 				{
 					//public static int value
+					
 					string re=x.substr(s+1,x.size()-s-1);
+					cout<<re<<"\n";
 					int s=re.find(" ");
 					string da=re.substr(0,s);
 					if(trim(da)=="static")
@@ -364,6 +369,127 @@ vector<cla> findcl(vector<string> lines)
 					
 				}
 			}
+		}
+
+		pc=pc+in_class.size()+3;
+		//cout<<"pc is"<<pc<<"\n";
+		tmp.push_back(clas);
+	}
+	return tmp;
+}
+*/
+vector<cla> findcl(vector<string> lines)
+{
+	vector<cla> tmp;
+	int pc=0;
+	while(pc<lines.size())
+	{
+		while(lines[pc].find("class")==string::npos)
+		{
+			pc++;	
+		}
+		int c=lines[pc].find("class");
+		string x=trim(lines[pc].substr(c+5,lines[pc].size()-c-5));
+		//cout<<x<<"\n";
+		c=x.find(" ");
+		string na=trim(x.substr(0,c));
+		//cout<<na<<"\n";
+		cla clas(na,x,classcount++);
+		data_types.push_back(na);
+		//print_lines(data_types);
+		vector<string> cl(lines.begin()+pc+1,lines.end());
+		//print_lines(cl);
+		vector<string> in_class=inbr(cl);
+		//print_lines(in_class);
+		int cc=0;
+		while(cc<in_class.size())
+		{
+			string x=in_class[cc];
+			int bro=x.find("(");
+			int brc=x.find(")");
+			int s=x.find(" ");
+			string ac=x.substr(0,s);
+			string rem=x.substr(s+1,x.size()-s-1);
+			if(bro!=string::npos  &&  brc==x.size()-1 && trim(x.substr(0,bro))==na)
+			{
+				//constructor
+				vector<string>ml(in_class.begin()+cc+1,in_class.end());
+				//print_lines(ml);
+				vector<string> in_ml=inbr(ml);
+				method me=promethod(in_ml,na);
+				clas.add(me);
+				//print_lines(in_ml);
+				cc=cc+in_ml.size()+3;
+			}
+			else
+			{
+				int sb=ac.find("[");
+				if(sb!=string::npos)
+					ac=trim(ac.substr(0,sb));
+				auto it=find(data_types.begin(),data_types.end(),ac);
+				if(it==data_types.end())
+				{
+					cout<<"error:1"<<x<<"\n";
+					exit(0);
+				}
+				else
+				{
+					if(bro!=string::npos&&brc==x.size()-1)
+					{
+						//function
+						//normal function
+						string name=trim(rem.substr(0,bro));
+						//cout<<"method name "<<na<<"\n";
+						if(cc+1<in_class.size()&&in_class[cc+1]=="{")
+						{
+							vector<string>ml(in_class.begin()+cc+1,in_class.end());
+							vector<string> in_ml=inbr(ml);
+							//print_lines(in_ml);
+							//cout<<"\n\n\n";
+							method me=promethod(in_ml,name);
+	//						me.print();
+							clas.add(me);
+							cc=cc+in_ml.size()+3;
+						}
+						else
+						{
+							method me(name,methodcount++);
+							clas.add(me);
+							cc++;
+						}
+					}
+					else
+					{
+						//data initialization
+						int s=rem.find(",");
+						if(s==string::npos)
+						{
+							//cout<<"initialization statement "<<ac<<" "<<re<<"\n";
+							variables z(ac,rem);
+							vars.push_back(z);
+							clas.add(z);
+						}
+						else
+						{
+							//int a,b;
+							//cout<<"ac "<<ac<<"\n";
+							while(s!=string::npos)
+							{
+								string var=trim(rem.substr(0,s));
+								variables z(ac,var);
+								vars.push_back(z);
+								clas.add(z);
+								rem=trim(rem.substr(s+1,rem.size()-s-1));
+								s=rem.find(",");
+							}
+							variables z(ac,rem);
+							vars.push_back(z);
+							clas.add(z);
+						}
+						cc++;
+					}
+				}
+			}	
 		}
 
 		pc=pc+in_class.size()+3;
@@ -417,6 +543,8 @@ void intermediate(string path)
 	}
 	for(auto a:res)
 		classes.push_back(a);
+//	for(auto a:classes)
+//		a.print();
 	//print_vars();
 //	vector<string> x;
 //	for(int i=2;i<lines.size();i++)

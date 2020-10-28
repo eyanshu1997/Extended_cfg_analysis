@@ -169,8 +169,11 @@ void generatemecfg()
 	{
 		for(auto a:c.methodlist)
 		{
-			vector<inst>b(a.instlist.begin(),a.instlist.begin()+(a.instlist.size()-1));
-			gcfg(b,a.instlist[a.instlist.size()-1].no);
+			if(a.instlist.size()>0)
+			{
+				vector<inst>b(a.instlist.begin(),a.instlist.begin()+(a.instlist.size()-1));
+				gcfg(b,a.instlist[a.instlist.size()-1].no);
+			}
 		}
 	}
 }
@@ -231,11 +234,11 @@ int main(int argc,char *argv[])
 	string	a(argv[1]);
 //	cout<<a<<"\n";
 	init(a);
-	//for(auto a:instructionmap)
-	//{
-	//	cout<<a.first<<" ";
-	//	(a.second).cprint();
-	//}
+//	for(auto a:instructionmap)
+//	{
+//		cout<<a.first<<" ";
+//		(a.second).cprint();
+//	}
 	printinst();
 	printmecfg(1);	
 	//methodmap[1].print();

@@ -1,5 +1,6 @@
 import java.io.*;
-class Node {    
+class Node {  
+	public:  
     int value; 
         Node left, right; 
           

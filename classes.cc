@@ -1,7 +1,7 @@
 class inst
 {
 	public:
-	int type; //0 is start #######1 for simple    ########2 for loop or if     ###########3 for function call ########5 for initalization ###6 for if #######7 for else  #### 8 is end
+	int type; //0 is start #######1 for simple    ########2 for loop or if     ###########3 for function call ########5 for initalization ###6 for if #######7 for else  #### 8 is end ### 9 for super
 	string instruction;
 	vector<inst> instlist;
 	string datatyp,varname;
@@ -58,8 +58,8 @@ class inst
 	void process(cla *b);
 	void cprint()
 	{
-		cout<<no<<" "<<instruction<<"\n";
-//		cout<<no<<" "<<type<<" "<<instruction<<"\n";
+//		cout<<no<<" "<<instruction<<"\n";
+		cout<<no<<" "<<type<<" "<<instruction<<"\n";
 //		if(type==5)
 //		{
 //			cout<<"varname is "<<varname<<"\n";
@@ -74,38 +74,12 @@ class inst
 	}
 	void print()
 	{
-		cout<<"instrcution count is "<<no<<"\ntype "<<type<<"\n";
-		if(type==1)
-			cout<<"["<<instruction<<"]\n\n";
-		else if(type==2)
+		cout<<no<<" "<<instruction<<"\n";
+		if(type==2||type==6||type==7)
 		{
-			cout<<"[\n if statement    "<<instruction<<"\n";
-			cout<<" no of instructions are "<<instlist.size()<<"\n";
-			for (long long i = 0; i < instlist.size(); i += 1)
-			{
-				cout<<"instsurtcion " <<i<<"\n";
-				instlist[i].print();
-			}
-			cout<<"\n]\n\n";
+			for(auto a:instlist)
+				a.print();
 		}
-		else
-		{
-			if(type==5)
-			{
-				cout<<"\n["<<instruction<<"\n";
-				cout<<"varname is "<<varname<<"\n";
-				cout<<"datatype is"<<datatyp<<"\n";
-				cout<<"type is "<<type<<"]\n\n";
-			}
-			else
-			{
-				cout<<"\n["<<instruction<<"\n";
-				cout<<"class is "<<cl<<"\n";
-				cout<<"method no is"<<meno<<"\n";
-				cout<<"method is "<<me<<"]\n\n";
-			}
-		}
-		
 	}
 };
 class method
@@ -149,8 +123,8 @@ class method
 	}
 	void print()
 	{
-		cout<<"method name is "<<name<<" no is "<<no<<"\n";
-		cout<<"instructions are \n";
+		cout<<name<<"  "<<no<<"\n";
+		//cout<<"instructions are \n";
 		for(auto a:instlist)
 			a.print();
 		cout<<"\n\n";
@@ -181,7 +155,7 @@ class variables
 	}
 	void print()
 	{
-		cout<<"data type "<<class_name<<" name "<<name<<"\n";
+		cout<<class_name<<"  "<<name<<"\n";
 	}
 };
 
@@ -190,11 +164,22 @@ class cla
 {
 	public:
 	string name;
+	string fname;
+	int no;
 	vector<variables> vars;
 	vector<method> methodlist;
-	cla(string n)
+	bool operator==(const cla& p) const
+	{ 
+		return name == p.name&&fname==p.fname&&no==p.no; 
+	}
+	cla()
+	{
+	}
+	cla(string n,string na,int x)
 	{
 		name=n;
+		fname=na;
+		no=x;
 	}
 	void add(method m)
 	{
@@ -206,7 +191,7 @@ class cla
 	}
 	void print()
 	{
-		cout<<"name of class "<<name <<"\n";
+		cout<<"name of class "<<name <<" "<<no<<"\n";
 		cout<<"no of variables is "<<vars.size()<<"\n";
 		for(auto a:vars)
 		{
@@ -268,7 +253,10 @@ void inst::process(cla *b)
 				{
 					//cout<<"1 instruction\n\n\n";
 					//instruction="unidentified "+instruction;
-					type=1;
+					if(trim(x)=="super")
+						type=9;
+					else
+						type=1;
 				}
 			}
 			else
