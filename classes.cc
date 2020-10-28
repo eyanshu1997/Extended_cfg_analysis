@@ -1,7 +1,7 @@
 class inst
 {
 	public:
-	int type; //1 for simple    2 for loop or if     3 for function call
+	int type; //0 is start #######1 for simple    ########2 for loop or if     ###########3 for function call ########5 for initalization ###6 for if #######7 for else  #### 8 is end
 	string instruction;
 	vector<inst> instlist;
 	string datatyp,varname;
@@ -10,16 +10,23 @@ class inst
 	int meno;
 	bool linked=false;
 	int no=-1;
+	inst()
+	{
+	}
+	bool operator==(const inst& p) const
+	{ 
+		return instruction == p.instruction&&type==p.type&&no==p.no; 
+	}
 	inst(string in)
 	{
 		//no=instructioncount++;
 		type=1;
 		instruction=in;
 	}
-	inst(string a,vector<inst> x)
+	inst(string a,vector<inst> x,int y)
 	{
 		//no=instructioncount++;
-		type=2;
+		type=y;
 		instruction=a;
 		instlist=x;
 	}
@@ -52,17 +59,18 @@ class inst
 	void cprint()
 	{
 		cout<<no<<" "<<instruction<<"\n";
-		if(type==5)
-		{
-			cout<<"varname is "<<varname<<"\n";
-			cout<<"datatype is"<<datatyp<<"\n";
-		}
-		if(linked==true)
-		{
-			cout<<"class is "<<cl<<"\n";
-			cout<<"method no is"<<meno<<"\n";
-			cout<<"method is "<<me<<"\n";
-		}
+//		cout<<no<<" "<<type<<" "<<instruction<<"\n";
+//		if(type==5)
+//		{
+//			cout<<"varname is "<<varname<<"\n";
+//			cout<<"datatype is"<<datatyp<<"\n";
+//		}
+//		if(linked==true)
+//		{
+//			cout<<"class is "<<cl<<"\n";
+//			cout<<"method no is"<<meno<<"\n";
+//			cout<<"method is "<<me<<"\n";
+//		}
 	}
 	void print()
 	{
@@ -301,7 +309,7 @@ void inst::process(cla *b)
 		{
 			//cout<<"1..3 instruction\n\n\n";
 			type=1;
-			instruction="unidentified "+instruction;
+			instruction=instruction;
 		}
 	}
 }

@@ -1,6 +1,7 @@
 class variables;
 class cla;
 class method;
+class inst;
 int methodcount=0;
 int instructioncount=0;
 string WHITESPACE = " \n\r\t\f\v";
@@ -12,3 +13,4 @@ vector<string>loop={"while","for"};
 
 vector<variables> vars;
 vector<cla> classes;
+

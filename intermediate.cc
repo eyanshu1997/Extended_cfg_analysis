@@ -137,7 +137,7 @@ vector<inst> get_inst(vector<string> in_ml)
 							int x=inbrc(in_ml,cc+1);
 							vector<string> li(in_ml.begin()+cc+1,in_ml.begin()+x);
 							vector<inst> z=get_inst(li);
-							ins.push_back(inst(in_ml[cc],z));
+							ins.push_back(inst(in_ml[cc],z,2));
 							cc=x+1;
 						}
 						else
@@ -148,7 +148,7 @@ vector<inst> get_inst(vector<string> in_ml)
 								//if() a=c;
 								vector<inst> ab;
 								ab.push_back(inst(in_ml[cc+1]));
-								ins.push_back(inst(in_ml[cc],ab));
+								ins.push_back(inst(in_ml[cc],ab,2));
 								cc=cc+2;
 							}
 							else
@@ -156,7 +156,7 @@ vector<inst> get_inst(vector<string> in_ml)
 								//if() if()
 								vector<string> li(in_ml.begin()+cc+1,in_ml.begin()+x+1);
 								vector<inst> l=get_inst(li);
-								ins.push_back(inst(in_ml[cc],l));
+								ins.push_back(inst(in_ml[cc],l,2));
 								cc=x+1;
 							}
 						}
@@ -177,7 +177,10 @@ vector<inst> get_inst(vector<string> in_ml)
 								int x=inbrc(in_ml,cc+1);
 								vector<string> li(in_ml.begin()+cc+2,in_ml.begin()+x);
 								vector<inst> z=get_inst(li);
-								ins.push_back(inst(in_ml[cc],z));
+								if(a=="if")
+									ins.push_back(inst(in_ml[cc],z,6));
+								else
+									ins.push_back(inst(in_ml[cc],z,7));
 								cc=x+1;
 							}
 							else
@@ -188,7 +191,10 @@ vector<inst> get_inst(vector<string> in_ml)
 									//if() a=c;
 									vector<inst> ab;
 									ab.push_back(inst(in_ml[cc+1]));
-									ins.push_back(inst(in_ml[cc],ab));
+									if(a=="if")
+										ins.push_back(inst(in_ml[cc],ab,6));
+									else
+										ins.push_back(inst(in_ml[cc],ab,7));
 									cc=cc+2;
 								}
 								else
@@ -196,7 +202,10 @@ vector<inst> get_inst(vector<string> in_ml)
 									//if() if()
 									vector<string> li(in_ml.begin()+cc+1,in_ml.begin()+x+1);
 									vector<inst> l=get_inst(li);
-									ins.push_back(inst(in_ml[cc],l));
+									if(a=="if")
+										ins.push_back(inst(in_ml[cc],l,6));
+									else
+										ins.push_back(inst(in_ml[cc],l,7));
 									cc=x+1;
 								}
 							}
@@ -221,9 +230,14 @@ vector<inst> get_inst(vector<string> in_ml)
 method promethod(vector<string> in_ml,string na)
 {
 	//vector<string> x;
+	vector<inst> z;
+	z.push_back(inst("start ",0));
 	vector<inst> a=get_inst(in_ml);
+	for(auto y:a)
+		z.push_back(y);
+	z.push_back(inst("end ",8));
 	int x=methodcount++;
-	method me(na,a,x);
+	method me(na,z,x);
 	//methodmap[x]=me;
 	return me;
 }
@@ -366,11 +380,11 @@ void assignno(vector<inst>::iterator x)
 		assignno(it);
 	}
 }
-void intermediate()
+void intermediate(string path)
 {
 		//string line="class node{";
 	//vector<string> lines=handlebr(trim(line),"{");
-	vector<string> lines=parse("test/Test.java");
+	vector<string> lines=parse(path);
 
 //	vector<string> lines=parse("a.txt");
 //	vector<inst> a=get_inst(lines);
