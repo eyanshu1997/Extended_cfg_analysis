@@ -84,7 +84,8 @@ vector<string> rememp(vector<string> lines)
 	{
 		a=trim(a);
 		if(a!=""&&a!=";")
-			ne.push_back(a);
+			if(a.find("//")!=0)
+				ne.push_back(a);
 	}
 	return ne;
 }

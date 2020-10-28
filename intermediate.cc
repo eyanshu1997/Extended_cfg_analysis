@@ -131,11 +131,11 @@ vector<inst> get_inst(vector<string> in_ml)
 					if(in_ml[cc].find(a)==0)
 					{
 						set=true;
-						if(in_ml[cc]=="{")
+						if(in_ml[cc+1]=="{")
 						{
 							//if{
 							int x=inbrc(in_ml,cc+1);
-							vector<string> li(in_ml.begin()+cc+1,in_ml.begin()+x);
+							vector<string> li(in_ml.begin()+cc+2,in_ml.begin()+x);
 							vector<inst> z=get_inst(li);
 							ins.push_back(inst(in_ml[cc],z,2));
 							cc=x+1;
@@ -398,7 +398,7 @@ void intermediate(string path)
 
 
 	vector<cla> res=findcl(lines);
-	classes=res;
+	//classes=res;
 	for(auto it=res.begin();it!=res.end();it++)
 	{
 //		it->print();
@@ -415,7 +415,8 @@ void intermediate(string path)
 			}
 		}
 	}
-	classes=res;
+	for(auto a:res)
+		classes.push_back(a);
 	//print_vars();
 //	vector<string> x;
 //	for(int i=2;i<lines.size();i++)

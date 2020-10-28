@@ -194,17 +194,43 @@ void printmecfg(int x)
 			cout<<"\n";
 	}
 }
-void init()
+
+//namespace fs = boost::filesystem;
+#include<sys/types.h>
+#include<dirent.h>
+void init(string path)
 {
-	intermediate("test/Test.java");
+	string ext(".java");
+	DIR* dirp = opendir(path.c_str());
+	struct dirent * dp;
+	while ((dp = readdir(dirp)) != NULL) 
+	{
+		string a(dp->d_name);
+		//cout<<a<<"\n";
+		if(a.find(ext)!=string::npos)
+		{
+			string x=path+"/"+a;
+			cout<<x<<"\n";
+			intermediate(x);
+		}
+	}
+	closedir(dirp);
 	mapmethods();
 	mapinstructions();
 	generatemecfg();
 	
 }
-int main()
+int main(int argc,char *argv[])
 {
-	init();
+	if(argc<2)
+	{
+		cout<<"error in args"<<"\n";
+		exit(0);
+	}
+	
+	string	a(argv[1]);
+//	cout<<a<<"\n";
+	init(a);
 	//for(auto a:instructionmap)
 	//{
 	//	cout<<a.first<<" ";
@@ -213,5 +239,5 @@ int main()
 	printinst();
 	printmecfg(1);	
 	//methodmap[1].print();
-	//printall();
+//	printall();
 }
