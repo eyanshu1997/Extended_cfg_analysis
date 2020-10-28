@@ -500,7 +500,7 @@ void findcl(vector<string> lines)
 }
 void assignno(vector<inst>::iterator x)
 {
-cout<<"called\n";
+//cout<<"called\n";
 	x->no=instructioncount++;
 	for (auto it = x->instlist.begin(); it != x->instlist.end(); it += 1)
 	{

@@ -205,6 +205,8 @@ void prepro()
 {
 	vector<cla>res=classes;
 	for(auto it=res.begin();it!=res.end();it++)
+		it->iprocess();
+	for(auto it=res.begin();it!=res.end();it++)
 	{
 //		it->print();
 		it->process();
@@ -265,4 +267,6 @@ int main(int argc,char *argv[])
 	printmecfg(1);	
 	//methodmap[1].print();
 //	printall();
+//	for(auto a:classes)
+//		a.printin();
 }

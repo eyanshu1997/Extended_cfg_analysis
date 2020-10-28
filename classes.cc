@@ -169,6 +169,13 @@ class cla
 	vector<variables> vars;
 	vector<method> methodlist;
 	vector<int>inherit;
+	void printin()
+	{
+		cout<<"name of class "<<name <<" "<<no<<"\n";
+		for(auto a:inherit)
+			cout<<a<<" ";
+		cout<<"\n";
+	}
 	bool operator==(const cla& p) const
 	{ 
 		return name == p.name&&fname==p.fname&&no==p.no; 
@@ -209,9 +216,35 @@ class cla
 		int e=fname.find(ch);
 		if(e!=string::npos)
 		{
-			;	
+			string rem=trim(fname.substr(e+ch.size(),fname.size()-e-ch.size()));
+			int c=rem.rfind(",");
+			if(c!=string::npos)
+			{
+				while(c!=string::npos)
+				{
+					string re=trim(rem.substr(c+1,rem.size()-c-1));
+					rem=trim(rem.substr(0,c));
+					c=rem.rfind(",");
+					for(auto a:classes)
+					{
+						if(rem==a.name)
+						{
+							inherit.push_back(a.no);
+						}
+					}
+				}
+			}
+			else
+			{
+				for(auto a:classes)
+				{
+					if(rem==a.name)
+					{
+						inherit.push_back(a.no);
+					}
+				}
+			}
 		}
-		
 	}
 	void process()
 	{
