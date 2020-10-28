@@ -74,6 +74,7 @@ vector<string> handlebr(string line,string br)
 	{
 		int st=line.find("for(");
 		int se=line.find(")");
+		if(st!=string::npos&&se!=string::npos)
 		if(st<fo<se)
 		{
 			lines.push_back(line);

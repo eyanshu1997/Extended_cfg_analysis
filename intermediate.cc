@@ -378,9 +378,9 @@ vector<cla> findcl(vector<string> lines)
 	return tmp;
 }
 */
-vector<cla> findcl(vector<string> lines)
+void findcl(vector<string> lines)
 {
-	vector<cla> tmp;
+//	vector<cla> tmp;
 	int pc=0;
 	while(pc<lines.size())
 	{
@@ -410,7 +410,7 @@ vector<cla> findcl(vector<string> lines)
 			int s=x.find(" ");
 			string ac=x.substr(0,s);
 			string rem=x.substr(s+1,x.size()-s-1);
-			if(bro!=string::npos  &&  brc==x.size()-1 && trim(x.substr(0,bro))==na)
+			if(bro!=string::npos  &&  brc!=string::npos && trim(x.substr(0,bro))==na)
 			{
 				//constructor
 				vector<string>ml(in_class.begin()+cc+1,in_class.end());
@@ -429,12 +429,12 @@ vector<cla> findcl(vector<string> lines)
 				auto it=find(data_types.begin(),data_types.end(),ac);
 				if(it==data_types.end())
 				{
-					cout<<"error:1"<<x<<"\n";
+					cout<<"error:1"<<x<<" "<<cc<<"\n";
 					exit(0);
 				}
 				else
 				{
-					if(bro!=string::npos&&brc==x.size()-1)
+					if(bro!=string::npos&&brc!=string::npos)
 					{
 						//function
 						//normal function
@@ -494,12 +494,13 @@ vector<cla> findcl(vector<string> lines)
 
 		pc=pc+in_class.size()+3;
 		//cout<<"pc is"<<pc<<"\n";
-		tmp.push_back(clas);
+		classes.push_back(clas);
 	}
-	return tmp;
+	//return tmp;
 }
 void assignno(vector<inst>::iterator x)
 {
+cout<<"called\n";
 	x->no=instructioncount++;
 	for (auto it = x->instlist.begin(); it != x->instlist.end(); it += 1)
 	{
@@ -523,26 +524,11 @@ void intermediate(string path)
 
 
 
-	vector<cla> res=findcl(lines);
+	findcl(lines);
 	//classes=res;
-	for(auto it=res.begin();it!=res.end();it++)
-	{
-//		it->print();
-		it->process();
-		//a.print();	
-	}
-	for (auto it = res.begin(); it != res.end(); it += 1)
-	{
-		for (auto im = (it->methodlist).begin(); im != (it->methodlist).end(); im += 1)
-		{
-			for (auto iti = im->instlist.begin(); iti != im->instlist.end(); iti += 1)
-			{
-				assignno(iti);
-			}
-		}
-	}
-	for(auto a:res)
-		classes.push_back(a);
+	
+//	/for(auto a:res)
+//		classes.push_back(a);
 //	for(auto a:classes)
 //		a.print();
 	//print_vars();

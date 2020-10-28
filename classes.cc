@@ -168,6 +168,7 @@ class cla
 	int no;
 	vector<variables> vars;
 	vector<method> methodlist;
+	vector<int>inherit;
 	bool operator==(const cla& p) const
 	{ 
 		return name == p.name&&fname==p.fname&&no==p.no; 
@@ -201,6 +202,16 @@ class cla
 		for(auto a :methodlist)
 			a.print();
 	
+	}
+	void iprocess()
+	{
+		string ch="extends ";
+		int e=fname.find(ch);
+		if(e!=string::npos)
+		{
+			;	
+		}
+		
 	}
 	void process()
 	{

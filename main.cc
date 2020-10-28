@@ -201,6 +201,27 @@ void printmecfg(int x)
 //namespace fs = boost::filesystem;
 #include<sys/types.h>
 #include<dirent.h>
+void prepro()
+{
+	vector<cla>res=classes;
+	for(auto it=res.begin();it!=res.end();it++)
+	{
+//		it->print();
+		it->process();
+		//a.print();	
+	}
+	for (auto it = res.begin(); it != res.end(); it += 1)
+	{
+		for (auto im = (it->methodlist).begin(); im != (it->methodlist).end(); im += 1)
+		{
+			for (auto iti = im->instlist.begin(); iti != im->instlist.end(); iti += 1)
+			{
+				assignno(iti);
+			}
+		}
+	}
+	classes=res;
+}
 void init(string path)
 {
 	string ext(".java");
@@ -217,6 +238,7 @@ void init(string path)
 			intermediate(x);
 		}
 	}
+	prepro();
 	closedir(dirp);
 	mapmethods();
 	mapinstructions();
