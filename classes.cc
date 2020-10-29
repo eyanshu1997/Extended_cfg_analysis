@@ -259,6 +259,20 @@ class cla
 			if(a.name==x)
 				return a.no;
 		}
+		for(auto a:inherit)
+		{
+			for(auto b:classes)
+			{
+				if(b.no==a)
+				{
+					for(auto c:b.methodlist)
+					{
+						if(c.name==x)
+							return c.no;
+					}
+				}
+			}
+		}
 		return -1;
 	}
 };
@@ -346,22 +360,3 @@ void inst::process(cla *b)
 	}
 }
 
-class cfg
-{
-	unordered_map<int,string> instructions;
-	vector<vector<int>> adj;
-	void print()	
-	{
-		for(auto a:instructions)
-		{
-			cout<<a.first<<" "<<a.second<<"\n";
-		}
-		for(auto a:adj)
-		{	for(auto b:a)
-				cout<<b<<" ";
-			cout<<"\n";
-		}
-		cout<<"\n";
-			
-	}
-};
