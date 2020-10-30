@@ -228,6 +228,7 @@ void mapclasses()
 class cfg
 {
 	public:
+	int no;
 	string methodname;
 	string classname;
 	map<int,inst> instructions;
@@ -243,7 +244,7 @@ class cfg
 	}
 	void print()	
 	{
-		cout<<"class is "<<classname<<" \nmethod is "<<methodname<<"\ncomplexity is"<<complexity<<"\n";
+		cout<<"class is "<<classname<<" \nmethod is "<<methodname<<"\ncomplexity is "<<complexity<<"\n";
 		for(auto a:instructions)
 		{
 			cout<<a.first<<" "<<a.second.instruction<<"\n";
@@ -259,6 +260,7 @@ class cfg
 		meth=y;
 		methodname=n;
 		classname=x;
+		no=y.no;
 		for(int i=start;i<end+1;i++)
 		{
 			instructions[i]=instructionmap[i];
@@ -295,12 +297,69 @@ class ecfg
 //	method meth;
 	vector<pair<int,int>> adj;
 	int ecomplexity;
-	/*
-	void calculateecomplexity()
+	int extracalls;
+	void store()
 	{
-		complexity=adj.size()-instructions.size()+2;
+		ecomplexity=calculateecomplexity();
 	}
-	*/
+	int calculateecomplexity()
+	{
+		extracalls=0;
+		cfg m;
+		vector<int>explored;
+		for(auto a:cfgs)
+		{
+			if(a.second.meth.name=="main")
+				m=a.second;
+		}
+		return cale(m,explored)+extracalls;
+	}
+	int cale(cfg x,vector<int> explored)
+	{
+		int value=x.complexity;
+		vector<int>called;
+		for(auto a:adj)
+		{
+			if(a.first==x.no)
+			{
+				called.push_back(a.second);
+			}
+		}
+		if(called.size()>0)
+		{
+			int prevalue=0;
+			for(auto a:called)
+			{
+				int thisvalue=0;
+				if(a==x.no)
+				{
+					thisvalue=2;
+					if(thisvalue>prevalue)
+					{
+						prevalue=thisvalue;
+						continue;
+					}
+				}
+				else
+				{
+					if(find(explored.begin(),explored.end(),a)!=explored.end())
+					{
+						extracalls++;
+						continue;
+					}
+					else
+					{
+						explored.push_back(a);
+						thisvalue=cale(cfgs[a],explored);
+						if(thisvalue>prevalue)
+							prevalue=thisvalue;
+					}
+				}
+			}
+			value+=prevalue;
+		}
+		return value;
+	}
 	void print()	
 	{
 		cout<<"complexity is "<<ecomplexity<<"\n";
@@ -324,7 +383,7 @@ class ecfg
 			for(auto b:a.methodlist)
 			{
 				cfg x(b.instlist[0].no,b.instlist[b.instlist.size()-1].no,b.name,a.name,b);
-				cfgs[b.no]=x;
+				cfgs[x.no]=x;
 			}
 		}
 		for(auto a:cfgs)
@@ -337,7 +396,7 @@ class ecfg
 				}
 			}
 		}
-		//calculateecomplexity();
+		store();
 	}
 };
 #include<sys/types.h>
@@ -355,7 +414,7 @@ void init(string path)
 		if(a.find(ext)!=string::npos)
 		{
 			string x=path+"/"+a;
-			cout<<x<<"\n";
+//			cout<<x<<"\n";
 			intermediate(x);
 		}
 	}
