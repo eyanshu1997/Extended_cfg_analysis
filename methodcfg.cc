@@ -194,8 +194,6 @@ void printmecfg(int x)
 }
 
 //namespace fs = boost::filesystem;
-#include<sys/types.h>
-#include<dirent.h>
 void prepro()
 {
 	vector<cla>res=classes;
@@ -239,6 +237,9 @@ class cfg
 	void calculatecomplexity()
 	{
 		complexity=adj.size()-instructions.size()+2;
+	}
+	cfg()
+	{
 	}
 	void print()	
 	{
@@ -285,58 +286,63 @@ class cfg
 		calculatecomplexity();
 	}
 };
-vector<vector<int>>extendedmethodcfg;
-void generateextendedmfg()
+class ecfg
 {
-	extendedmethodcfg=methodcfg;
-	for(auto a:instructionmap)
+	public:
+//	string methodname;
+//	string classname;
+	map<int,cfg> cfgs;
+//	method meth;
+	vector<pair<int,int>> adj;
+	int ecomplexity;
+	/*
+	void calculateecomplexity()
 	{
-		if(a.second.type==3)
-		{
-//			cout<<a.second.instruction<<" ";
-//			cout<<methodmap[a.second.meno].instlist[0].no<<"\n";
-			extendedmethodcfg[a.second.no][methodmap[a.second.meno].instlist[0].no]=1;
-			extendedmethodcfg[a.second.no][methodmap[a.second.meno].instlist[methodmap[a.second.meno].instlist.size()-1].no]=1;
-		}
+		complexity=adj.size()-instructions.size()+2;
 	}
-}
-void printextendedmfg(int x)
-{
-	if(x==1)
-		cout<<"the paths are :\n";
-	for (long long i = 0; i < extendedmethodcfg.size(); i += 1)
+	*/
+	void print()	
 	{
-		for (long long j = 0; j < extendedmethodcfg[0].size(); j += 1)
+		cout<<"complexity is "<<ecomplexity<<"\n";
+		for(auto a:cfgs)
 		{
-			if(x==1)
+			cout<<a.first<<" \n";
+			a.second.print();
+		}
+		cout<<"the extended links are\n";
+		for(auto a:adj)
+		{
+			cout<<"["<<a.first<<" "<<a.second<<"] ";
+		}
+		cout<<"\n\n\n";
+	}
+	ecfg()
+	{
+		//int no=0;
+		for(auto a:classes)
+		{
+			for(auto b:a.methodlist)
 			{
-				if(extendedmethodcfg[i][j]==1)
-					cout<<i<<" "<<j<<"\n";
+				cfg x(b.instlist[0].no,b.instlist[b.instlist.size()-1].no,b.name,a.name,b);
+				cfgs[b.no]=x;
 			}
-			else
-				cout<<extendedmethodcfg[i][j]<<" ";
 		}
-		if(x!=1)
-			cout<<"\n";
-	}
-}
-vector<cfg> cfgs;
-void generatecfgs()
-{
-	for(auto a:classes)
-	{
-		for(auto b:a.methodlist)
+		for(auto a:cfgs)
 		{
-			cfg x(b.instlist[0].no,b.instlist[b.instlist.size()-1].no,b.name,a.name,b);
-			cfgs.push_back(x);
+			for(auto b:a.second.instructions)
+			{
+				if(b.second.type==3)
+				{
+					adj.push_back(make_pair(a.first,b.second.meno));
+				}
+			}
 		}
+		//calculateecomplexity();
 	}
-}
-void printcfgs()
-{
-	for(auto a:cfgs)
-		a.print();
-}
+};
+#include<sys/types.h>
+#include<dirent.h>
+
 void init(string path)
 {
 	string ext(".java");
@@ -358,8 +364,6 @@ void init(string path)
 	mapmethods();
 	mapinstructions();
 	generatemecfg();
-	generatecfgs();
-	generateextendedmfg();
 	//mapclasses();
 	
 }

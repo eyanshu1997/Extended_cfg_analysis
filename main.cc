@@ -17,8 +17,9 @@ int main(int argc,char *argv[])
 	string	a(argv[1]);
 //	cout<<a<<"\n";
 	init(a);
-	
-	printcfgs();
+	ecfg fin;
+	fin.print();	
+//	printcfgs();
 //	for(auto a:instructionmap)
 //	{
 //		cout<<a.first<<" ";
