@@ -235,12 +235,58 @@ class cfg
 	method meth;
 	vector<pair<int,int>> adj;
 	int complexity;
+	vector<vector<int>>basisset;
 	void calculatecomplexity()
 	{
 		complexity=adj.size()-instructions.size()+2;
 	}
 	cfg()
 	{
+	}
+	vector<vector<int>> basissetconst(vector<int> cur,int i,int end)
+	{
+		vector<vector<int>> res;
+		if(i!=end)
+		{
+			cur.push_back(i);
+			vector<int>next;
+			for(auto a:adj)
+			{
+				if(i==a.first)
+					next.push_back(a.second);
+			}
+			if(next.size()>1)
+			{
+				for(auto a:next)
+				{
+					vector<vector<int>> x=basissetconst(cur,a,end);
+					for(auto b:x)
+					{
+						res.push_back(b);
+					}
+				}
+			}
+			else
+			{
+				res=basissetconst(cur,next[0],end);
+			}
+			
+		}
+		else
+		{
+			cur.push_back(i);
+			res.push_back(cur);
+		}
+		return res;
+	}
+	void findbasisset()
+	{
+		int start=instructions.begin()->first;
+		int end=instructions.rbegin()->first;
+		int i=start;
+		vector<int>cur;
+		//cur.push_back(i);
+		basisset=basissetconst(cur,i,end);
 	}
 	void print()	
 	{
@@ -249,10 +295,13 @@ class cfg
 		{
 			cout<<a.first<<" "<<a.second.instruction<<"\n";
 		}
+		cout<<" the adjency matrix is \n";
 		for(auto a:adj)
 		{
 			cout<<"["<<a.first<<" "<<a.second<<"] ";
 		}
+		cout<<"\nthe basis set is:\n";
+		for(auto a:basisset){for(auto i:a) cout<<i<<" ";cout<<"\n"; }cout<<"\n";
 		cout<<"\n\n\n";
 	}
 	cfg(int start,int end,string n,string x,method y)
@@ -286,6 +335,7 @@ class cfg
 		}
 		*/
 		calculatecomplexity();
+		findbasisset();
 	}
 };
 class ecfg
@@ -298,9 +348,73 @@ class ecfg
 	vector<pair<int,int>> adj;
 	int ecomplexity;
 	int extracalls;
+	vector<vector<int>>basisset;
 	void store()
 	{
 		ecomplexity=calculateecomplexity();
+	}
+	vector<vector<int>> basissetconst(int cfg,int i,vector<vector<int>>cur)
+	{
+		vector<vector<int>>res;
+		for (auto it = cur.begin(); it != cur.end(); it += 1)
+		{
+			it->push_back(i);
+		}
+		if(cfgs[cfg].instructions[i].type!=3)
+		{
+			cur=basissetconst(cfgs[cfg].instructions[i].meno,cfgs[cfgs[cfg].instructions[i].meno].instructions.begin()->first,cur);
+		}
+		if(i!=cfgs[cfg].instructions.rbegin()->first)
+		{
+			vector<int>next;
+			for(auto a:cfgs[i].adj)
+			{
+				if(i==a.first)
+					next.push_back(a.second);
+			}
+			if(next.size()>1)
+			{
+				for(auto a:next)
+				{
+					vector<vector<int>> x=basissetconst(cfg,i,cur);
+					for(auto b:x)
+					{
+						res.push_back(b);
+					}
+				}
+			}
+			else
+			{
+				res=basissetconst(cfg,i,cur);
+			}
+		}
+		else
+		{
+			for(auto a:cur)
+				res.push_back(a);
+		}
+		
+		return res;
+	}
+	void findbasisset()
+	{
+		int m=-1;
+		
+		for(auto a:cfgs)
+		{
+			if(a.second.meth.name=="main")
+				m=a.second.no;
+		}
+		if(m==-1)
+		{
+			cout<<"error";
+			exit(0);
+		}
+		vector<vector<int>> cur;
+		vector<int>x;
+		x.push_back(cfgs[m].instructions.begin()->first);
+		cur.push_back(x);
+		basisset=basissetconst(m,cfgs[m].instructions.begin()->first+1,cur);
 	}
 	int calculateecomplexity()
 	{
@@ -397,6 +511,7 @@ class ecfg
 			}
 		}
 		store();
+		findbasisset();
 	}
 };
 #include<sys/types.h>

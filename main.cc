@@ -5,6 +5,7 @@ using namespace std;
 #include "classes.cc"
 #include "intermediate.cc"
 #include "methodcfg.cc"
+#define MA 18
 
 int main(int argc,char *argv[])
 {
@@ -18,8 +19,9 @@ int main(int argc,char *argv[])
 //	cout<<a<<"\n";
 	init(a);
 	ecfg fin;
+	
 	fin.print();	
-//	printcfgs();
+	//	printcfgs();
 //	for(auto a:instructionmap)
 //	{
 //		cout<<a.first<<" ";
