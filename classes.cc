@@ -299,7 +299,7 @@ void inst::process(cla *b)
 			{
 				//cout<<". not found "<<x<<"\n";
 				int s=b->contains(trim(x));
-				if(s>0)
+				if(s>=0)
 				{
 					//cout<<"res "<<x<<" "<<b->name<<"\n\n\n";
 					type=3;
@@ -331,7 +331,7 @@ void inst::process(cla *b)
 						if(trim(a.name)==trim(v.class_name))
 						{
 							int s=a.contains(trim(x));
-							if(s>0)
+							if(s>=0)
 							{
 								//cout<<"res "<<x<<" "<<a.name<<"\n\n\n";
 								type=3;

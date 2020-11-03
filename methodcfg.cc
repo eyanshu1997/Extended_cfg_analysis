@@ -255,9 +255,9 @@ class cfg
 				if(i==a.first)
 					next.push_back(a.second);
 			}
-			if(next.size()>1)
+			for(auto a:next)
 			{
-				for(auto a:next)
+				if(find(cur.begin(), cur.end(),a)==cur.end())
 				{
 					vector<vector<int>> x=basissetconst(cur,a,end);
 					for(auto b:x)
@@ -266,10 +266,7 @@ class cfg
 					}
 				}
 			}
-			else
-			{
-				res=basissetconst(cur,next[0],end);
-			}
+		
 			
 		}
 		else
@@ -290,19 +287,19 @@ class cfg
 	}
 	void print()	
 	{
-		cout<<"class is "<<classname<<" \nmethod is "<<methodname<<"\ncomplexity is "<<complexity<<"\n";
+		cout<<"The class name is "<<classname<<" \nThe Method name is "<<methodname<<"\nThe Cyclomatic Complexity is "<<complexity<<"\n";
 		for(auto a:instructions)
 		{
 			cout<<a.first<<" "<<a.second.instruction<<"\n";
 		}
-		cout<<" the adjency matrix is \n";
+		cout<<"The adjancency matrix is \n";
 		for(auto a:adj)
 		{
 			cout<<"["<<a.first<<" "<<a.second<<"] ";
 		}
-		cout<<"\nthe basis set is:\n";
-		for(auto a:basisset){for(auto i:a) cout<<i<<" ";cout<<"\n"; }cout<<"\n";
-		cout<<"\n\n\n";
+//		cout<<"\nthe basis set is:\n";
+//		for(auto a:basisset){for(auto i:a) cout<<i<<" ";cout<<"\n"; }cout<<"\n";
+		cout<<"\n\n";
 	}
 	cfg(int start,int end,string n,string x,method y)
 	{
@@ -336,6 +333,7 @@ class cfg
 		*/
 		calculatecomplexity();
 		findbasisset();
+//		print();
 	}
 };
 class ecfg
@@ -353,51 +351,84 @@ class ecfg
 	{
 		ecomplexity=calculateecomplexity();
 	}
-	vector<vector<int>> basissetconst(int cfg,int i,vector<vector<int>>cur)
+	int search(int x,vector<pair<int,int>> y)
 	{
+		for(auto a:y)
+		{
+			if(a.first==x)
+				return a.second;
+		}
+		return -1;
+	}
+	vector<vector<int>> basisiset(int a,vector<pair<int,int>> calls)
+	{
+		cout<<"called for "<<a<<"\n";
+		/*
+		if(a!=7&&a!=0)
+		{
+			cout<<"hell"<<a;
+			
+			exit(0);
+		}
+		*/
 		vector<vector<int>>res;
-		for (auto it = cur.begin(); it != cur.end(); it += 1)
+		for(auto b:cfgs[a].basisset)
 		{
-			it->push_back(i);
-		}
-		if(cfgs[cfg].instructions[i].type!=3)
-		{
-			cur=basissetconst(cfgs[cfg].instructions[i].meno,cfgs[cfgs[cfg].instructions[i].meno].instructions.begin()->first,cur);
-		}
-		if(i!=cfgs[cfg].instructions.rbegin()->first)
-		{
-			vector<int>next;
-			for(auto a:cfgs[i].adj)
+			cout<<"current basis set is\n";
+			for(auto i:b) cout<<i<<" ";cout<<"\n";
+			vector<vector<int>>re;
+			vector<int>st;
+			st.push_back(b[0]);
+			re.push_back(st);
+			for (long long i = 1; i < b.size(); i += 1)
 			{
-				if(i==a.first)
-					next.push_back(a.second);
-			}
-			if(next.size()>1)
-			{
-				for(auto a:next)
+				for (auto it = re.begin(); it != re.end(); it += 1)
 				{
-					vector<vector<int>> x=basissetconst(cfg,i,cur);
-					for(auto b:x)
-					{
-						res.push_back(b);
-					}
+					it->push_back(b[i]);
 				}
+				
+				int s=search(b[i],calls);
+				if(s!=-1)
+				{
+					cout<<"called for s "<<b[i]<<" s is "<<s<<"\n";
+					vector<vector<int>>bre=basisiset(s,calls);
+					vector<vector<int>> newre;
+					for(auto r:re)
+					{
+						for(auto br:bre)
+						{
+							vector<int> rz=r;
+							for(auto a:br)
+								rz.push_back(a);
+							newre.push_back(rz);
+						}
+					}
+					re=newre;
+					cout<<"ran on s"<<s<<"\n";
+					for(auto a:re){for(auto i:a) cout<<i<<" ";cout<<"\n"; }cout<<"\n";
+				}
+				
 			}
-			else
-			{
-				res=basissetconst(cfg,i,cur);
-			}
+			for(auto x:re)
+				res.push_back(x);
+			cout<<"res is \n";
+			for(auto a:res){for(auto i:a) cout<<i<<" ";cout<<"\n"; }cout<<"\n";
 		}
-		else
-		{
-			for(auto a:cur)
-				res.push_back(a);
-		}
-		
 		return res;
 	}
 	void findbasisset()
 	{
+		vector<pair<int,int>>calls;
+		for(auto a:cfgs)
+		{
+			for(auto b:a.second.instructions)
+			{
+				if(b.second.type==3)
+				{
+					calls.push_back(make_pair(b.second.no,b.second.meno));
+				}
+			}
+		}
 		int m=-1;
 		
 		for(auto a:cfgs)
@@ -410,11 +441,10 @@ class ecfg
 			cout<<"error";
 			exit(0);
 		}
-		vector<vector<int>> cur;
-		vector<int>x;
-		x.push_back(cfgs[m].instructions.begin()->first);
-		cur.push_back(x);
-		basisset=basissetconst(m,cfgs[m].instructions.begin()->first+1,cur);
+		cout<<"calls are";
+		for(auto i:calls) cout<<"["<<i.first<<" "<<i.second<<"] ";cout<<"\n";
+		vector<vector<int>> mai=basisiset(m,calls);
+		for(auto a:mai){for(auto i:a) cout<<i<<" ";cout<<"\n"; }cout<<"\n";;	
 	}
 	int calculateecomplexity()
 	{
@@ -476,13 +506,14 @@ class ecfg
 	}
 	void print()	
 	{
-		cout<<"complexity is "<<ecomplexity<<"\n";
+		
 		for(auto a:cfgs)
 		{
-			cout<<a.first<<" \n";
+			cout<<"The CFG no is "<<a.first<<" \n";
 			a.second.print();
 		}
-		cout<<"the extended links are\n";
+		cout<<"Extended Cyclomatic Complexity is "<<ecomplexity<<"\n";
+		cout<<"The Extended Control flow graph edges are\n";
 		for(auto a:adj)
 		{
 			cout<<"["<<a.first<<" "<<a.second<<"] ";
@@ -511,7 +542,7 @@ class ecfg
 			}
 		}
 		store();
-		findbasisset();
+//		findbasisset();
 	}
 };
 #include<sys/types.h>

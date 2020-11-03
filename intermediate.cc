@@ -213,6 +213,7 @@ vector<inst> get_inst(vector<string> in_ml)
 					}
 					if(s==false)
 					{
+//						cout<<"flagged "<<in_ml[cc]<<"\n";
 						ins.push_back(inst(in_ml[cc],4));
 						cc++;
 					}
